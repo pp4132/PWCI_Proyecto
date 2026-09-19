@@ -1,0 +1,890 @@
+/* =========================================
+   AUTH PAGE
+========================================= */
+
+.auth-page {
+
+    min-height: 100vh;
+
+    background:
+        var(--color-background);
+}
+
+
+/* =========================================
+   CONTENEDOR PRINCIPAL
+========================================= */
+
+.auth {
+
+    min-height: 100vh;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+}
+
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+.auth__form-section {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 60px 40px;
+
+    background:
+        var(--color-surface);
+}
+
+
+.auth__form-container {
+
+    width: 100%;
+
+    max-width: 450px;
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.auth__logo {
+
+    display: inline-block;
+
+    margin-bottom: 70px;
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        1.3rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        1px;
+}
+
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.auth__heading {
+
+    margin-bottom: 35px;
+}
+
+
+.auth__tag {
+
+    display: inline-block;
+
+    margin-bottom: 10px;
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        .75rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        2px;
+}
+
+
+.auth__heading h1 {
+
+    font-size:
+        2.5rem;
+
+    line-height:
+        1.15;
+
+    letter-spacing:
+        -1px;
+}
+
+
+.auth__heading p {
+
+    margin-top:
+        10px;
+
+    color:
+        var(--color-text-light);
+}
+
+
+/* =========================================
+   ERROR
+========================================= */
+
+.auth__error {
+
+    margin-bottom:
+        20px;
+
+    padding:
+        12px 15px;
+
+    border:
+        1px solid #fecaca;
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        #fef2f2;
+
+    color:
+        #dc2626;
+
+    font-size:
+        .9rem;
+}
+
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+.auth__form {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        22px;
+}
+
+
+.form-group {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        8px;
+}
+
+
+.form-group label {
+
+    font-size:
+        .9rem;
+
+    font-weight:
+        600;
+}
+
+
+.form-group__header {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+}
+
+
+.form-group__header a {
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        .8rem;
+
+    font-weight:
+        600;
+}
+
+
+.form-group input {
+
+    width:
+        100%;
+
+    padding:
+        13px 14px;
+
+    border:
+        1px solid var(--color-border);
+
+    border-radius:
+        var(--radius-sm);
+
+    outline:
+        none;
+
+    color:
+        var(--color-text);
+
+    background:
+        white;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.form-group input:focus {
+
+    border-color:
+        var(--color-primary);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(99, 91, 255, .12);
+}
+
+
+.form-group input::placeholder {
+
+    color:
+        #94a3b8;
+}
+
+
+/* =========================================
+   CONTRASEÑA
+========================================= */
+
+.password-input {
+
+    position:
+        relative;
+}
+
+
+.password-input input {
+
+    padding-right:
+        80px;
+}
+
+
+.password-toggle {
+
+    position:
+        absolute;
+
+    top:
+        50%;
+
+    right:
+        12px;
+
+    transform:
+        translateY(-50%);
+
+    border:
+        none;
+
+    background:
+        transparent;
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        .8rem;
+
+    font-weight:
+        700;
+
+    cursor:
+        pointer;
+}
+
+
+/* =========================================
+   CHECKBOX
+========================================= */
+
+.form-check {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+}
+
+
+.form-check input {
+
+    width:
+        16px;
+
+    height:
+        16px;
+
+    accent-color:
+        var(--color-primary);
+
+    cursor:
+        pointer;
+}
+
+
+.form-check label {
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .85rem;
+
+    cursor:
+        pointer;
+}
+
+
+/* =========================================
+   BOTÓN
+========================================= */
+
+.auth__submit {
+
+    width:
+        100%;
+
+    margin-top:
+        5px;
+}
+
+
+/* =========================================
+   REGISTRO
+========================================= */
+
+.auth__register {
+
+    display:
+        flex;
+
+    justify-content:
+        center;
+
+    gap:
+        5px;
+
+    margin-top:
+        30px;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .9rem;
+}
+
+
+.auth__register a {
+
+    color:
+        var(--color-primary);
+
+    font-weight:
+        700;
+}
+
+
+/* =========================================
+   VOLVER
+========================================= */
+
+.auth__back {
+
+    display:
+        block;
+
+    width:
+        fit-content;
+
+    margin:
+        35px auto 0;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .85rem;
+}
+
+
+.auth__back:hover {
+
+    color:
+        var(--color-primary);
+}
+
+
+/* =========================================
+   SECCIÓN VISUAL
+========================================= */
+
+.auth__visual {
+
+    position:
+        relative;
+
+    overflow:
+        hidden;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        60px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #635bff,
+            #7c3aed
+        );
+
+    color:
+        white;
+}
+
+
+.auth__visual::before {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    width:
+        450px;
+
+    height:
+        450px;
+
+    top:
+        -150px;
+
+    right:
+        -150px;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255,255,255,.08);
+}
+
+
+.auth__visual::after {
+
+    content:
+        "";
+
+    position:
+        absolute;
+
+    width:
+        300px;
+
+    height:
+        300px;
+
+    bottom:
+        -100px;
+
+    left:
+        -100px;
+
+    border-radius:
+        50%;
+
+    background:
+        rgba(255,255,255,.06);
+}
+
+
+.auth__visual-content {
+
+    position:
+        relative;
+
+    z-index:
+        1;
+
+    max-width:
+        500px;
+}
+
+
+/* =========================================
+   VISUAL LOGO
+========================================= */
+
+.auth__visual-logo {
+
+    width:
+        65px;
+
+    height:
+        65px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    margin-bottom:
+        35px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.3);
+
+    border-radius:
+        18px;
+
+    background:
+        rgba(255,255,255,.12);
+
+    font-size:
+        1.8rem;
+
+    font-weight:
+        800;
+}
+
+
+.auth__visual-tag {
+
+    font-size:
+        .75rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        2px;
+
+    opacity:
+        .8;
+}
+
+
+.auth__visual h2 {
+
+    margin-top:
+        15px;
+
+    font-size:
+        3rem;
+
+    line-height:
+        1.1;
+
+    letter-spacing:
+        -1px;
+}
+
+
+.auth__visual p {
+
+    max-width:
+        450px;
+
+    margin-top:
+        20px;
+
+    color:
+        rgba(255,255,255,.8);
+
+    line-height:
+        1.7;
+}
+
+
+/* =========================================
+   TARJETA FLOTANTE
+========================================= */
+
+.auth__floating-card {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        15px;
+
+    width:
+        fit-content;
+
+    margin-top:
+        50px;
+
+    padding:
+        15px 20px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.2);
+
+    border-radius:
+        var(--radius-md);
+
+    background:
+        rgba(255,255,255,.12);
+
+    backdrop-filter:
+        blur(10px);
+}
+
+
+.auth__floating-icon {
+
+    width:
+        40px;
+
+    height:
+        40px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        10px;
+
+    background:
+        white;
+
+    color:
+        var(--color-primary);
+
+    font-weight:
+        800;
+}
+
+
+.auth__floating-card strong,
+.auth__floating-card span {
+
+    display:
+        block;
+}
+
+
+.auth__floating-card span {
+
+    margin-top:
+        2px;
+
+    color:
+        rgba(255,255,255,.65);
+
+    font-size:
+        .8rem;
+}
+
+/* =========================================
+   SELECT
+========================================= */
+
+.form-group select {
+
+    width: 100%;
+
+    padding: 13px 14px;
+
+    border:
+        1px solid var(--color-border);
+
+    border-radius:
+        var(--radius-sm);
+
+    outline: none;
+
+    color:
+        var(--color-text);
+
+    background-color:
+        white;
+
+    cursor: pointer;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.form-group select:focus {
+
+    border-color:
+        var(--color-primary);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(99, 91, 255, .12);
+}
+
+
+/* =========================================
+   AYUDA DEL FORMULARIO
+========================================= */
+
+.form-help {
+
+    margin-top:
+        -2px;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .75rem;
+}
+
+
+/* =========================================
+   ENLACES DENTRO DE CHECKBOX
+========================================= */
+
+.form-check a {
+
+    color:
+        var(--color-primary);
+
+    font-weight:
+        600;
+}
+
+
+/* =========================================
+   ESTADO INVÁLIDO
+========================================= */
+
+.form-group input:invalid:not(:placeholder-shown) {
+
+    border-color:
+        #fca5a5;
+}
+
+
+.form-group input:valid:not(:placeholder-shown) {
+
+    border-color:
+        #86efac;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 850px) {
+
+    .auth {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .auth__visual {
+
+        display:
+            none;
+    }
+
+
+    .auth__form-section {
+
+        min-height:
+            100vh;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .auth__form-section {
+
+        padding:
+            40px 25px;
+    }
+
+
+    .auth__logo {
+
+        margin-bottom:
+            50px;
+    }
+
+
+    .auth__heading h1 {
+
+        font-size:
+            2rem;
+    }
+
+
+    .auth__register {
+
+        flex-direction:
+            column;
+
+        align-items:
+            center;
+    }
+
+}

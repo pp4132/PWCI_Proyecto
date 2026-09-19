@@ -1,0 +1,788 @@
+/* =========================================
+   CREACIÓN DE CURSO
+========================================= */
+
+.create-course {
+    max-width: 1000px;
+}
+
+
+/* =========================================
+   ENCABEZADO
+========================================= */
+
+.create-course__header {
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    margin-bottom: 30px;
+}
+
+
+.create-course__header h1 {
+
+    margin-top: 5px;
+
+    font-size:
+        2rem;
+
+    line-height:
+        1.2;
+}
+
+
+.create-course__header p {
+
+    margin-top: 7px;
+
+    color:
+        var(--color-text-light);
+}
+
+
+/* =========================================
+   FORMULARIO
+========================================= */
+
+.create-course__form {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 20px;
+}
+
+
+/* =========================================
+   TARJETA
+========================================= */
+
+.create-card {
+
+    background:
+        var(--color-surface);
+
+    border:
+        1px solid var(--color-border);
+
+    border-radius:
+        var(--radius-md);
+
+    box-shadow:
+        var(--shadow-sm);
+
+    overflow:
+        hidden;
+}
+
+
+.create-card__header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    padding:
+        22px 24px;
+
+    border-bottom:
+        1px solid var(--color-border);
+}
+
+
+.create-card__number {
+
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius:
+        10px;
+
+    background:
+        #ecfdf5;
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        .8rem;
+
+    font-weight:
+        800;
+}
+
+
+.create-card__header h2 {
+
+    font-size:
+        1.05rem;
+}
+
+
+.create-card__header p {
+
+    margin-top: 2px;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .82rem;
+}
+
+
+.create-card__body {
+
+    padding:
+        24px;
+}
+
+
+/* =========================================
+   FORMULARIOS
+========================================= */
+
+.form-group {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+    margin-bottom: 20px;
+}
+
+
+.form-group:last-child {
+    margin-bottom: 0;
+}
+
+
+.form-group label {
+
+    font-size:
+        .88rem;
+
+    font-weight:
+        600;
+}
+
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+
+    width: 100%;
+
+    padding:
+        11px 13px;
+
+    border:
+        1px solid var(--color-border);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        white;
+
+    color:
+        var(--color-text);
+
+    outline:
+        none;
+
+    transition:
+        border-color .2s ease,
+        box-shadow .2s ease;
+}
+
+
+.form-group textarea {
+
+    resize:
+        vertical;
+
+    min-height:
+        130px;
+}
+
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+
+    border-color:
+        var(--color-primary);
+
+    box-shadow:
+        0 0 0 3px rgba(89, 238, 52, .10);
+}
+
+
+.form-group small {
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .76rem;
+}
+
+
+.form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        20px;
+}
+
+
+/* =========================================
+   SUBIR IMAGEN
+========================================= */
+
+.course-upload {
+
+    min-height:
+        210px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    border:
+        2px dashed var(--color-border);
+
+    border-radius:
+        var(--radius-md);
+
+    background:
+        #fafbfc;
+
+    cursor:
+        pointer;
+
+    transition:
+        .2s ease;
+}
+
+
+.course-upload:hover {
+
+    border-color:
+        var(--color-primary);
+
+    background:
+        #fafff8;
+}
+
+
+.course-upload__icon {
+
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius:
+        50%;
+
+    background:
+        #ecfdf5;
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        1.5rem;
+
+    font-weight:
+        700;
+}
+
+
+.course-upload strong {
+
+    font-size:
+        .95rem;
+}
+
+
+.course-upload span {
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .78rem;
+}
+
+
+.course-upload input {
+
+    display:
+        none;
+}
+
+
+/* =========================================
+   MÓDULOS
+========================================= */
+
+.modules {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        14px;
+}
+
+
+.module {
+
+    border:
+        1px solid var(--color-border);
+
+    border-radius:
+        var(--radius-sm);
+
+    overflow:
+        hidden;
+}
+
+
+.module__header {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+    justify-content:
+        space-between;
+
+    padding:
+        15px 17px;
+
+    background:
+        #f8fafc;
+}
+
+
+.module__header span {
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        .68rem;
+
+    font-weight:
+        800;
+
+    letter-spacing:
+        .5px;
+}
+
+
+.module__header h3 {
+
+    margin-top:
+        2px;
+
+    font-size:
+        .92rem;
+}
+
+
+.module__menu,
+.lesson__menu {
+
+    width:
+        32px;
+
+    height:
+        32px;
+
+    border:
+        none;
+
+    border-radius:
+        6px;
+
+    background:
+        transparent;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        1.1rem;
+
+    cursor:
+        pointer;
+}
+
+
+.module__menu:hover,
+.lesson__menu:hover {
+
+    background:
+        #e2e8f0;
+
+    color:
+        var(--color-text);
+}
+
+
+/* =========================================
+   LECCIONES
+========================================= */
+
+.module__lessons {
+
+    padding:
+        5px 12px;
+}
+
+
+.lesson {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        10px;
+
+    min-height:
+        48px;
+
+    padding:
+        5px;
+
+    border-bottom:
+        1px solid #f1f5f9;
+}
+
+
+.lesson:last-child {
+
+    border-bottom:
+        none;
+}
+
+
+.lesson__drag {
+
+    color:
+        #cbd5e1;
+
+    font-size:
+        .8rem;
+
+    cursor:
+        grab;
+}
+
+
+.lesson__icon {
+
+    width:
+        28px;
+
+    height:
+        28px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+    justify-content:
+        center;
+
+    border-radius:
+        6px;
+
+    background:
+        #ecfdf5;
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        .65rem;
+}
+
+
+.lesson__title {
+
+    flex:
+        1;
+
+    font-size:
+        .85rem;
+}
+
+
+.add-lesson {
+
+    width:
+        100%;
+
+    padding:
+        12px;
+
+    border:
+        none;
+
+    border-top:
+        1px solid var(--color-border);
+
+    background:
+        white;
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        .82rem;
+
+    font-weight:
+        600;
+
+    text-align:
+        left;
+
+    cursor:
+        pointer;
+}
+
+
+.add-lesson:hover {
+
+    background:
+        #f8fff6;
+}
+
+
+.add-module {
+
+    width:
+        100%;
+
+    margin-top:
+        15px;
+
+    padding:
+        12px;
+
+    border:
+        1px dashed var(--color-primary);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        #fafff8;
+
+    color:
+        var(--color-primary);
+
+    font-weight:
+        600;
+
+    cursor:
+        pointer;
+}
+
+
+.add-module:hover {
+
+    background:
+        #f1ffed;
+}
+
+
+/* =========================================
+   PRECIO
+========================================= */
+
+.price-input {
+
+    max-width:
+        300px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    border:
+        1px solid var(--color-border);
+
+    border-radius:
+        var(--radius-sm);
+
+    overflow:
+        hidden;
+}
+
+
+.price-input span {
+
+    padding:
+        0 13px;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .85rem;
+}
+
+
+.price-input input {
+
+    width:
+        100%;
+
+    padding:
+        12px 0;
+
+    border:
+        none;
+
+    outline:
+        none;
+
+    font-size:
+        1rem;
+
+    font-weight:
+        600;
+}
+
+
+/* =========================================
+   ACCIONES
+========================================= */
+
+.create-course__actions {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        flex-end;
+
+    gap:
+        10px;
+
+    padding:
+        5px 0 25px;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 700px) {
+
+    .create-course__header {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+
+    .form-grid {
+
+        grid-template-columns:
+            1fr;
+
+        gap:
+            0;
+    }
+
+
+    .create-card__body {
+
+        padding:
+            18px;
+    }
+
+
+    .create-card__header {
+
+        padding:
+            18px;
+    }
+
+
+    .create-course__actions {
+
+        align-items:
+            stretch;
+
+        flex-direction:
+            column-reverse;
+    }
+
+
+    .create-course__actions .btn {
+
+        width:
+            100%;
+    }
+
+
+    .price-input {
+
+        max-width:
+            100%;
+    }
+
+}

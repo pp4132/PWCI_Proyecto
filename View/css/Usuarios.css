@@ -1,0 +1,983 @@
+/* =========================================
+   PÁGINA USUARIOS
+========================================= */
+
+.users-page {
+
+    padding-bottom:
+        50px;
+}
+
+
+/* =========================================
+   CABECERA
+========================================= */
+
+.users-heading {
+
+    margin-bottom:
+        28px;
+}
+
+
+.users-heading h1 {
+
+    margin-top:
+        5px;
+
+    font-size:
+        2rem;
+
+    line-height:
+        1.2;
+}
+
+
+.users-heading p {
+
+    margin-top:
+        7px;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .9rem;
+}
+
+
+/* =========================================
+   ESTADÍSTICAS
+========================================= */
+
+.users-summary {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
+    gap:
+        15px;
+
+    margin-bottom:
+        28px;
+}
+
+
+.user-stat {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        13px;
+
+    padding:
+        18px;
+
+    border:
+        1px solid var(--color-border);
+
+    border-radius:
+        var(--radius-md);
+
+    background:
+        white;
+
+    box-shadow:
+        var(--shadow-sm);
+}
+
+
+.user-stat__icon {
+
+    width:
+        43px;
+
+    height:
+        43px;
+
+    flex-shrink:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        11px;
+
+    font-weight:
+        700;
+}
+
+
+.user-stat__icon.purple {
+
+    background:
+        #f3e8ff;
+
+    color:
+        #9333ea;
+}
+
+
+.user-stat__icon.green {
+
+    background:
+        #dcfce7;
+
+    color:
+        #16a34a;
+}
+
+
+.user-stat__icon.blue {
+
+    background:
+        #e0f2fe;
+
+    color:
+        #0284c7;
+}
+
+
+.user-stat__icon.orange {
+
+    background:
+        #ffedd5;
+
+    color:
+        #ea580c;
+}
+
+
+.user-stat span {
+
+    display:
+        block;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .7rem;
+}
+
+
+.user-stat strong {
+
+    display:
+        block;
+
+    margin-top:
+        2px;
+
+    font-size:
+        1.35rem;
+}
+
+
+/* =========================================
+   PANEL
+========================================= */
+
+.users-panel {
+
+    overflow:
+        hidden;
+
+    border:
+        1px solid var(--color-border);
+
+    border-radius:
+        var(--radius-md);
+
+    background:
+        white;
+
+    box-shadow:
+        var(--shadow-sm);
+}
+
+
+.users-panel__header {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        20px;
+
+    padding:
+        20px;
+
+    border-bottom:
+        1px solid var(--color-border);
+}
+
+
+.users-panel__header h2 {
+
+    font-size:
+        1.1rem;
+}
+
+
+.users-panel__header p {
+
+    margin-top:
+        3px;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .72rem;
+}
+
+
+/* =========================================
+   TOOLBAR
+========================================= */
+
+.users-toolbar {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    padding:
+        15px 20px;
+
+    border-bottom:
+        1px solid var(--color-border);
+
+    background:
+        #fcfdfe;
+}
+
+
+.users-search {
+
+    width:
+        100%;
+
+    max-width:
+        330px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        8px;
+
+    padding:
+        8px 11px;
+
+    border:
+        1px solid var(--color-border);
+
+    border-radius:
+        var(--radius-sm);
+
+    background:
+        white;
+}
+
+
+.users-search span {
+
+    color:
+        #94a3b8;
+
+    font-size:
+        .75rem;
+}
+
+
+.users-search input {
+
+    width:
+        100%;
+
+    border:
+        none;
+
+    outline:
+        none;
+
+    background:
+        transparent;
+
+    color:
+        var(--color-text);
+
+    font-size:
+        .72rem;
+}
+
+
+.users-filters {
+
+    display:
+        flex;
+
+    gap:
+        8px;
+}
+
+
+.users-filters select {
+
+    padding:
+        9px 11px;
+
+    border:
+        1px solid var(--color-border);
+
+    border-radius:
+        var(--radius-sm);
+
+    outline:
+        none;
+
+    background:
+        white;
+
+    color:
+        var(--color-text);
+
+    font-size:
+        .7rem;
+
+    cursor:
+        pointer;
+}
+
+
+.users-filters select:focus {
+
+    border-color:
+        var(--color-primary);
+}
+
+
+/* =========================================
+   TABLA
+========================================= */
+
+.users-table-wrapper {
+
+    width:
+        100%;
+
+    overflow-x:
+        auto;
+}
+
+
+.users-table {
+
+    width:
+        100%;
+
+    min-width:
+        750px;
+
+    border-collapse:
+        collapse;
+}
+
+
+.users-table th {
+
+    padding:
+        12px 20px;
+
+    background:
+        #f8fafc;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .65rem;
+
+    font-weight:
+        700;
+
+    text-align:
+        left;
+
+    white-space:
+        nowrap;
+}
+
+
+.users-table td {
+
+    padding:
+        14px 20px;
+
+    border-top:
+        1px solid var(--color-border);
+
+    vertical-align:
+        middle;
+}
+
+
+.users-table tbody tr {
+
+    transition:
+        background .15s ease;
+}
+
+
+.users-table tbody tr:hover {
+
+    background:
+        #fafdfb;
+}
+
+
+/* =========================================
+   CELDA USUARIO
+========================================= */
+
+.user-cell {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        11px;
+
+    min-width:
+        230px;
+}
+
+
+.user-cell__avatar {
+
+    width:
+        39px;
+
+    height:
+        39px;
+
+    flex-shrink:
+        0;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        50%;
+
+    background:
+        #ecfdf5;
+
+    color:
+        var(--color-primary);
+
+    font-size:
+        .75rem;
+
+    font-weight:
+        800;
+}
+
+
+.user-cell strong {
+
+    display:
+        block;
+
+    font-size:
+        .75rem;
+}
+
+
+.user-cell span {
+
+    display:
+        block;
+
+    margin-top:
+        2px;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .62rem;
+}
+
+
+/* =========================================
+   ROLES
+========================================= */
+
+.user-role {
+
+    display:
+        inline-flex;
+
+    padding:
+        5px 9px;
+
+    border-radius:
+        6px;
+
+    font-size:
+        .6rem;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+}
+
+
+.user-role.student {
+
+    background:
+        #eff6ff;
+
+    color:
+        #2563eb;
+}
+
+
+.user-role.instructor {
+
+    background:
+        #f3e8ff;
+
+    color:
+        #9333ea;
+}
+
+
+.user-role.administrator {
+
+    background:
+        #fff7ed;
+
+    color:
+        #ea580c;
+}
+
+
+/* =========================================
+   FECHA
+========================================= */
+
+.user-date {
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .68rem;
+
+    white-space:
+        nowrap;
+}
+
+
+/* =========================================
+   ESTADO
+========================================= */
+
+.user-status {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    gap:
+        6px;
+
+    font-size:
+        .65rem;
+
+    font-weight:
+        700;
+
+    white-space:
+        nowrap;
+}
+
+
+.user-status > span {
+
+    width:
+        6px;
+
+    height:
+        6px;
+
+    border-radius:
+        50%;
+
+    background:
+        currentColor;
+}
+
+
+.user-status.active {
+
+    color:
+        #16a34a;
+}
+
+
+.user-status.inactive {
+
+    color:
+        #94a3b8;
+}
+
+
+/* =========================================
+   ACCIONES
+========================================= */
+
+.user-actions {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        5px;
+}
+
+
+.user-action {
+
+    width:
+        30px;
+
+    height:
+        30px;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border:
+        1px solid transparent;
+
+    border-radius:
+        6px;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .75rem;
+
+    transition:
+        .2s ease;
+}
+
+
+.user-action:hover {
+
+    border-color:
+        var(--color-border);
+
+    background:
+        #f8fafc;
+
+    color:
+        var(--color-primary);
+}
+
+
+.user-action--danger:hover {
+
+    color:
+        #ef4444;
+}
+
+
+/* =========================================
+   PAGINACIÓN
+========================================= */
+
+.users-pagination {
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        space-between;
+
+    gap:
+        15px;
+
+    padding:
+        15px 20px;
+
+    border-top:
+        1px solid var(--color-border);
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .65rem;
+}
+
+
+.users-pagination strong {
+
+    color:
+        var(--color-text);
+}
+
+
+.users-pagination > div {
+
+    display:
+        flex;
+
+    gap:
+        4px;
+}
+
+
+.users-pagination button {
+
+    width:
+        29px;
+
+    height:
+        29px;
+
+    border:
+        1px solid var(--color-border);
+
+    border-radius:
+        6px;
+
+    background:
+        white;
+
+    color:
+        var(--color-text-light);
+
+    font-size:
+        .65rem;
+
+    cursor:
+        pointer;
+}
+
+
+.users-pagination button:hover:not(:disabled) {
+
+    border-color:
+        var(--color-primary);
+
+    color:
+        var(--color-primary);
+}
+
+
+.users-pagination button.active {
+
+    border-color:
+        var(--color-primary);
+
+    background:
+        var(--color-primary);
+
+    color:
+        white;
+}
+
+
+.users-pagination button:disabled {
+
+    opacity:
+        .4;
+
+    cursor:
+        not-allowed;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1050px) {
+
+    .users-summary {
+
+        grid-template-columns:
+            repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .users-panel__header {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+
+    .users-toolbar {
+
+        align-items:
+            stretch;
+
+        flex-direction:
+            column;
+    }
+
+
+    .users-search {
+
+        max-width:
+            none;
+    }
+
+
+    .users-filters {
+
+        width:
+            100%;
+    }
+
+
+    .users-filters select {
+
+        width:
+            100%;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .users-summary {
+
+        grid-template-columns:
+            1fr 1fr;
+
+        gap:
+            10px;
+    }
+
+
+    .user-stat {
+
+        padding:
+            13px;
+
+        gap:
+            9px;
+    }
+
+
+    .user-stat__icon {
+
+        width:
+            36px;
+
+        height:
+            36px;
+
+        font-size:
+            .8rem;
+    }
+
+
+    .user-stat span {
+
+        font-size:
+            .6rem;
+    }
+
+
+    .user-stat strong {
+
+        font-size:
+            1.1rem;
+    }
+
+
+    .users-pagination {
+
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+    }
+
+}
