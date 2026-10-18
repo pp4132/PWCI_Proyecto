@@ -1,37 +1,38 @@
 
-        /*
-         * Mostrar / ocultar contraseña
-         */
+/*
+ * Mostrar / ocultar contraseñas
+ */
+function configurarPasswordToggle(
+    passwordId,
+    toggleId
+) {
+    const campoPassword =
+        document.getElementById(passwordId);
 
-        const togglePassword =
-            document.getElementById("togglePassword");
+    const botonToggle =
+        document.getElementById(toggleId);
 
-        const password =
-            document.getElementById("password");
+    if (!campoPassword || !botonToggle) {
+        return;
+    }
 
+    botonToggle.addEventListener("click", function () {
+        const estaOculta =
+            campoPassword.type === "password";
 
-        if (togglePassword && password) {
+        campoPassword.type = estaOculta
+            ? "text"
+            : "password";
 
-            togglePassword.addEventListener(
-                "click",
-                function () {
+        botonToggle.textContent = estaOculta
+            ? "Ocultar"
+            : "Mostrar";
 
-                    const isPassword =
-                        password.type === "password";
-
-
-                    password.type =
-                        isPassword
-                            ? "text"
-                            : "password";
-
-
-                    togglePassword.textContent =
-                        isPassword
-                            ? "Ocultar"
-                            : "Mostrar";
-
-                }
-            );
-
-        }
+        botonToggle.setAttribute(
+            "aria-label",
+            estaOculta
+                ? "Ocultar contraseña"
+                : "Mostrar contraseña"
+        );
+    });
+}

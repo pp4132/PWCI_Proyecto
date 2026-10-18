@@ -1,6 +1,4 @@
-
 <?php
-
 class Env
 {
     public static function cargar(string $ruta): void

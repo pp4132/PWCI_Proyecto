@@ -1,49 +1,34 @@
 <?php
+require_once __DIR__ . "/../../Controller/RegistroController.php";
+$controlador = new RegistroController();
 
-    /*
-     * En el futuro estos valores pueden venir del Controller.
-     *
-     * Ejemplo:
-     *
-     * $error = "El correo ya está registrado.";
-     *
-     * Por ahora lo dejamos vacío para el prototipo.
-     */
+$resultado = $controlador->registrar();
 
-    $error = "";
-
+$error = $resultado["error"];
+$mensaje = $resultado["mensaje"];
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
     >
-
     <title>Crear cuenta | Academia</title>
 
-
     <!-- CSS general -->
-
     <link
         rel="stylesheet"
         href="../css/Style.css"
     >
 
-
     <!-- CSS de autenticación -->
-
     <link
         rel="stylesheet"
         href="../css/Auth.css"
     >
-
 </head>
 
 
@@ -116,24 +101,33 @@
 
                     <!-- =================================
                          NOMBRE
-                    ================================== -->
-
+                    ================================== --> 
                     <div class="form-group">
-
-                        <label for="nombre">
-                            Nombre completo
-                        </label>
-
+                        <label for="nombre">Nombre(s)</label>
                         <input
                             type="text"
                             id="nombre"
                             name="nombre"
-                            placeholder="Tu nombre completo"
-                            autocomplete="name"
+                            placeholder="Tu nombre"
+                            maxlength="100"
+                            autocomplete="given-name"
                             required
                         >
-
                     </div>
+
+                    <div class="form-group">
+                        <label for="apellidos">Apellidos</label>
+                        <input
+                            type="text"
+                            id="apellidos"
+                            name="apellidos"
+                            placeholder="Tus apellidos"
+                            maxlength="150"
+                            autocomplete="family-name"
+                            required
+                        >
+                    </div>
+
 
 
                     <!-- =================================
@@ -182,12 +176,50 @@
                                 Selecciona una opción
                             </option>
 
-                            <option value="estudiante">
+                            <option value="Estudiante">
                                 Estudiante
                             </option>
 
-                            <option value="instructor">
+                            <option value="Instructor">
                                 Instructor
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                    <!-- =================================
+                         Género
+                    ================================== -->
+
+                    <div class="form-group">
+
+                        <label for="rol">
+                            Género
+                        </label>
+
+                        <select
+                            id="genero"
+                            name="genero"
+                            required
+                        >
+
+                            <option
+                                value=""
+                                selected
+                                disabled
+                            >
+                                Selecciona una opción
+                            </option>
+
+                            <option value="Hombre">
+                                Hombre
+                            </option>
+                            <option value="Mujer">
+                                Mujer
+                            </option>
+                            <option value="No contestar">
+                                No contestar
                             </option>
 
                         </select>
@@ -400,9 +432,7 @@
                         <span>
                             Avanza a tu propio ritmo
                         </span>
-
                     </div>
-
                 </div>
 
 
@@ -418,76 +448,55 @@
     <!-- =================================
          JAVASCRIPT
     ================================== -->
-
-    <script src="../js/Main.js"></script>
-
-
-    <script>
-
+    
+    <script src="../js/Main.js">
         configurarPasswordToggle(
             "password",
             "togglePassword"
         );
-
 
         configurarPasswordToggle(
             "password_confirmation",
             "togglePasswordConfirmation"
         );
 
-
         /*
-         * Validar que las contraseñas coincidan
-         */
-
-        const form =
+        * Validar que las contraseñas coincidan
+        */
+        const formularioRegistro =
             document.querySelector(".auth__form");
 
-        const password =
+        const campoPassword =
             document.getElementById("password");
 
-        const passwordConfirmation =
-            document.getElementById(
-                "password_confirmation"
-            );
-
+        const campoConfirmacion =
+            document.getElementById("password_confirmation");
 
         if (
-            form &&
-            password &&
-            passwordConfirmation
+            formularioRegistro &&
+            campoPassword &&
+            campoConfirmacion
         ) {
-
-            form.addEventListener(
+            formularioRegistro.addEventListener(
                 "submit",
                 function (event) {
-
                     if (
-                        password.value !==
-                        passwordConfirmation.value
+                        campoPassword.value !==
+                        campoConfirmacion.value
                     ) {
-
                         event.preventDefault();
 
-                        passwordConfirmation
-                            .setCustomValidity(
-                                "Las contraseñas no coinciden."
-                            );
+                        campoConfirmacion.setCustomValidity(
+                            "Las contraseñas no coinciden."
+                        );
 
-                        passwordConfirmation.reportValidity();
-
+                        campoConfirmacion.reportValidity();
                     } else {
-
-                        passwordConfirmation
-                            .setCustomValidity("");
-
+                        campoConfirmacion.setCustomValidity("");
                     }
-
                 }
             );
-
         }
-
     </script>
 
 

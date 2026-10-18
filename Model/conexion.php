@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . "/Env.php";
 class Database
 {
     private ?PDO $conexion = null;
@@ -10,8 +10,11 @@ class Database
             return $this->conexion;
         }
 
+        // Cargar las variables del archivo .env
+        Env::cargar(__DIR__ . "/../.env");
+
         $host = $_ENV['DB_HOST'] ?? 'localhost';
-        $port = $_ENV['DB_PORT'] ?? '3307';
+        $port = $_ENV['DB_PORT'] ?? '3306';
         $dbname = $_ENV['DB_NAME'] ?? '';
         $username = $_ENV['DB_USER'] ?? '';
         $password = $_ENV['DB_PASS'] ?? '';
@@ -42,7 +45,9 @@ class Database
             error_log($e->getMessage());
 
             throw new RuntimeException(
-                'No se pudo conectar con MySQL.'
+                'No se pudo conectar con MySQL.',
+                0,
+                $e
             );
         }
     }
