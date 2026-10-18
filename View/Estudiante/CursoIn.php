@@ -8,7 +8,7 @@
     <title>Aprender curso | MiAcademia</title>
 
     <!-- Tu CSS principal -->
-    <link rel="stylesheet" href="..//css/Style.css">
+    <link rel="stylesheet" href="../css/Style.css">
 
     <!-- Estilos específicos -->
     <link rel="stylesheet" href="../css/Cursoin.css">
