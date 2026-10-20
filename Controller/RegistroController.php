@@ -117,12 +117,12 @@ class RegistroController
                 : "No se pudo registrar la cuenta.";
 
         } catch (Throwable $e) {
-    error_log(
-        get_class($e) . ": " . $e->getMessage()
-    );
+            error_log(
+                get_class($e) . ": " . $e->getMessage()
+            );
 
-    $error = "Error: " . $e->getMessage();
-}
+            $error = "Error: " . $e->getMessage();
+        }
 
         return compact("error", "mensaje");
     }

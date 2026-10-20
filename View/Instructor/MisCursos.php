@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . "/../../Middleware/AuthMiddleware.php";
+AuthMiddleware::requiereRol(["Instructor"]);
 
 /*
 |--------------------------------------------------------------------------

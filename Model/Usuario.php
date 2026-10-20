@@ -70,4 +70,47 @@ class Usuario
             ? (int) $resultado["id_rol"]
             : null;
     }
+
+    public function autenticar(string $email, string $password): ?array {
+        $sql = "SELECT
+                    u.id_usuario,
+                    u.nombre,
+                    u.apellidos,
+                    u.email,
+                    u.password,
+                    u.id_rol,
+                    r.nombre_rol,
+                    u.estatus
+                FROM usuarios AS u
+                INNER JOIN roles AS r
+                    ON u.id_rol = r.id_rol
+                WHERE u.email = :email
+                LIMIT 1";
+
+        $consulta = $this->conexion->prepare($sql);
+        $consulta->execute([
+            "email" => $email
+        ]);
+
+        $usuario = $consulta->fetch(PDO::FETCH_ASSOC);
+
+        // El correo no existe o la contraseña es incorrecta.
+        if (
+            !$usuario ||
+            !password_verify($password, $usuario["password"])
+        ) {
+            return null;
+        }
+
+        // Solo se permite el acceso a cuentas activas.
+        if ($usuario["estatus"] !== "Activo") {
+            return null;
+        }
+
+        // No exponemos el hash de la contraseña al controlador.
+        unset($usuario["password"]);
+
+        return $usuario;
+    }
+    
 }

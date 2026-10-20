@@ -1,4 +1,8 @@
+<?php
+require_once __DIR__ . "/../../Middleware/AuthMiddleware.php";
 
+AuthMiddleware::requiereRol(["Estudiante"]);
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
