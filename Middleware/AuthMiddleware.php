@@ -3,9 +3,7 @@
 
 class AuthMiddleware
 {
-    /**
-     * Verifica si el usuario ha iniciado sesión.
-     */
+    /*Verifica si el usuario ha iniciado sesión.*/
     public static function requiereAutenticacion(): void
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -13,14 +11,12 @@ class AuthMiddleware
         }
 
         if (empty($_SESSION['usuario_id'])) {
-            header('Location: /View/Auth/Login.php');
+            header("Location: ../../View/Auth/Login.php");
             exit;
         }
     }
 
-    /**
-     * Verifica si el usuario tiene uno de los roles permitidos.
-     */
+    /*Verifica si el usuario tiene uno de los roles permitidos.*/
     public static function requiereRol(array $rolesPermitidos): void
     {
         self::requiereAutenticacion();
