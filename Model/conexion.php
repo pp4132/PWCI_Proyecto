@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . "/Env.php";
+require_once __DIR__ . "/ENV.php";
 class Database
 {
     private ?PDO $conexion = null;

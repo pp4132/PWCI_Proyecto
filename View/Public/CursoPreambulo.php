@@ -1,152 +1,84 @@
+
 <?php
 
-    /*
-     * =========================================
-     * ID DEL CURSO
-     * =========================================
-     *
-     * Posteriormente el Controller se encargará
-     * de obtener el curso correspondiente.
-     */
-    $cursoId = isset($_GET["id"])
-        ? (int) $_GET["id"]
-        : 1;
+require_once __DIR__ . '/../../Model/ENV.php';
+require_once __DIR__ . '/../../Model/conexion.php';
 
-    /*
-     * =========================================
-     * DATOS TEMPORALES DEL CURSO
-     * =========================================
-     */
+$cursoId = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+
+if (!$cursoId || $cursoId <= 0) {
+    http_response_code(400);
+    exit('El identificador del curso no es válido.');
+}
+
+try {
+    Env::cargar(__DIR__ . '/../../.env');
+
+    $baseDatos = new Database();
+    $pdo = $baseDatos->conectar();
+
+    $sql = "SELECT
+                c.id_curso,
+                c.nombre_curso,
+                c.descripcion,
+                c.precio_curso,
+                c.promedio_general,
+                c.id_instructor,
+                cat.nombre_categoria,
+                u.nombre AS nombre_instructor,
+                u.apellidos AS apellidos_instructor
+            FROM cursos c
+            INNER JOIN categorias cat
+                ON cat.id_categoria = c.id_categoria
+            INNER JOIN usuarios u
+                ON u.id_usuario = c.id_instructor
+            WHERE c.id_curso = :id
+              AND c.estatus = 1
+            LIMIT 1";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(['id' => $cursoId]);
+
+    $datosCurso = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (!$datosCurso) {
+        http_response_code(404);
+        exit('El curso no existe o no está disponible.');
+    }
+
     $curso = [
-        "id" => $cursoId,
-        "titulo" => "JavaScript desde cero",
-        "descripcion_corta" =>
-            "Aprende JavaScript desde las bases hasta la creación de aplicaciones web interactivas.",
-        "descripcion" =>
-            "Este curso está diseñado para personas que quieren comenzar a programar con JavaScript y desarrollar una base sólida para continuar con el desarrollo web.",
-        "categoria" => "Programación",
-        "instructor" => "Juan Pérez",
-        "instructor_descripcion" =>
-            "Desarrollador web e instructor especializado en tecnologías frontend y backend.",
-        "rating" => "4.8",
-        "total_resenas" => 86,
-        "estudiantes" => 325,
-
-        "nivel" => "Principiante",
-
-        "duracion" => "12 horas",
-
-        "lecciones" => 35,
-
-        "idioma" => "Español",
-
-        "precio" => 299,
-
-        "precio_anterior" => 499,
-
-        "certificado" => true,
-
-        "actualizado" => "Agosto 2026"
-
+        'id' => (int) $datosCurso['id_curso'],
+        'titulo' => $datosCurso['nombre_curso'],
+        'descripcion' => $datosCurso['descripcion'] ?? '',
+        'descripcion_corta' => $datosCurso['descripcion'] ?? '',
+        'categoria' => $datosCurso['nombre_categoria'],
+        'instructor' => trim(
+            $datosCurso['nombre_instructor'] . ' ' .
+            $datosCurso['apellidos_instructor']
+        ),
+        'rating' => $datosCurso['promedio_general'],
+        'precio' => (float) $datosCurso['precio_curso'],
     ];
 
+} catch (Throwable $e) {
+    error_log('Error cargando el curso: ' . $e);
+    http_response_code(500);
+    exit('No fue posible cargar el curso. Inténtalo más tarde.');
+}
 
-    /*
-     * =========================================
-     * LO QUE APRENDERÁS
-     * =========================================
-     */
+// Los siguientes datos continúan siendo temporales
+// hasta que los conectes a sus respectivas tablas.
+$aprendizajes = [
+    'Comprender los fundamentos de programación',
+    'Trabajar con ejercicios prácticos',
+    'Desarrollar pequeños proyectos'
+];
 
-    $aprendizajes = [
-
-        "Comprender los fundamentos de JavaScript",
-
-        "Trabajar con variables, funciones y objetos",
-
-        "Manipular elementos del DOM",
-
-        "Crear formularios interactivos",
-
-        "Consumir información mediante APIs",
-
-        "Desarrollar pequeños proyectos web"
-
-    ];
-
-
-    /*
-     * =========================================
-     * CONTENIDO DEL CURSO
-     * =========================================
-     */
-
-    $secciones = [
-
-        [
-            "titulo" => "Introducción a JavaScript",
-            "lecciones" => 5,
-            "duracion" => "45 min"
-        ],
-
-        [
-            "titulo" => "Variables y tipos de datos",
-            "lecciones" => 6,
-            "duracion" => "1 h 20 min"
-        ],
-
-        [
-            "titulo" => "Funciones y estructuras",
-            "lecciones" => 7,
-            "duracion" => "2 h"
-        ],
-
-        [
-            "titulo" => "DOM y eventos",
-            "lecciones" => 8,
-            "duracion" => "3 h"
-        ],
-
-        [
-            "titulo" => "APIs y proyectos",
-            "lecciones" => 9,
-            "duracion" => "4 h 55 min"
-        ]
-
-    ];
-
-
-    /*
-     * =========================================
-     * COMENTARIOS
-     * =========================================
-     */
-
-    $resenas = [
-
-        [
-            "usuario" => "Daniel Torres",
-            "rating" => 5,
-            "comentario" =>
-                "Muy buen curso para comenzar. Las explicaciones son claras y los ejercicios ayudan bastante."
-        ],
-
-        [
-            "usuario" => "Laura Sánchez",
-            "rating" => 5,
-            "comentario" =>
-                "Me gustó mucho la forma en que se explica cada tema. Lo recomiendo para principiantes."
-        ],
-
-        [
-            "usuario" => "Miguel Rodríguez",
-            "rating" => 4,
-            "comentario" =>
-                "Buen contenido y ejemplos prácticos. Me hubiera gustado que tuviera más proyectos."
-        ]
-
-    ];
+$secciones = [];
+$resenas = [];
 
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 
@@ -312,12 +244,18 @@
                             </p>
 
                             <!-- BOTÓN -->
-                            <a
-                                href="../Auth/Login.php?curso=<?= $curso["id"] ?>"
+                            
+                            <button
+                                type="button"
+                                id="btn-inscribirse"
+                                data-curso-id="<?= (int) $curso["id"] ?>"
                                 class="btn btn--primary btn--large"
                             >
                                 Inscribirme ahora
-                            </a>
+                            </button>
+
+                            <p id="mensaje-pago" role="status"></p>
+
                             <p class="guarantee">
                                 Acceso inmediato después
                                 de la inscripción.
@@ -887,6 +825,54 @@
 
             document.getElementById('lista-resenas')
                 .textContent = 'No fue posible cargar las opiniones.';
+        });
+    </script>
+    <script>        
+        const botonInscripcion = document.getElementById('btn-inscribirse');
+        const mensajePago = document.getElementById('mensaje-pago');
+
+        botonInscripcion.addEventListener('click', async () => {
+            const idCurso = Number(botonInscripcion.dataset.cursoId);
+
+            botonInscripcion.disabled = true;
+            mensajePago.textContent = 'Preparando el pago...';
+
+            try {
+                const respuesta = await fetch('../../api/pagos.php', {
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        id_curso: idCurso
+                    })
+                });
+
+                const datos = await respuesta.json();
+
+                if (respuesta.status === 401) {
+                    window.location.href =
+                        `../Auth/Login.php?curso=${encodeURIComponent(idCurso)}`;
+                    return;
+                }
+
+                if (!respuesta.ok || !datos.success) {
+                    throw new Error(
+                        datos.message || 'No se pudo iniciar el pago.'
+                    );
+                }
+
+                if (!datos.checkout_url) {
+                    throw new Error('Stripe no devolvió una URL de pago.');
+                }
+
+                window.location.href = datos.checkout_url;
+
+            } catch (error) {
+                mensajePago.textContent = error.message;
+                botonInscripcion.disabled = false;
+            }
         });
     </script>
 
