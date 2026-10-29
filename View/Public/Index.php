@@ -398,7 +398,7 @@
 <?php include("../Compartidas/Footer.php")?>
 
 
-    <script src="View/js/Main.js"></script>
+    <script src="../js/Main.js"></script>
 
 </body>
 </html>

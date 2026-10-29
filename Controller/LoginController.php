@@ -41,7 +41,7 @@ class LoginController
         $_SESSION["usuario_nombre"] = $usuario["nombre"];
 
         // Redirección al tablero compartido.
-        header("Location: ../Compartidas/Tablero.php");
+        header("Location: ../../Controller/TableroController.php");
         exit;
     }
 }

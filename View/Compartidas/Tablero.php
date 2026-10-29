@@ -1,52 +1,26 @@
+
 <?php
+
 require_once __DIR__ . "/../../Middleware/AuthMiddleware.php";
+
 AuthMiddleware::requiereRol([
-    "Admin",
+    "Administrador",
     "Instructor",
     "Estudiante"
 ]);
-/*
-|--------------------------------------------------------------------------
-| TABLERO COMPARTIDO
-|--------------------------------------------------------------------------
-|
-| Esta vista recibe toda la información desde el Controller.
-|
-| No se realizan consultas a la base de datos aquí.
-|
-| El Controller deberá proporcionar:
-|
-| $datos["usuario"]
-| $datos["estadisticas"]
-| $datos["cursos"]
-| $datos["actividad"]
-|
-|--------------------------------------------------------------------------
-*/
-
 
 $usuario = $datos["usuario"] ?? [];
-
 $estadisticas = $datos["estadisticas"] ?? [];
-
 $cursos = $datos["cursos"] ?? [];
-
 $actividad = $datos["actividad"] ?? [];
 
-
-// Datos básicos del usuario
-
 $nombre = $usuario["nombre"] ?? "Usuario";
-
 $apellido = $usuario["apellido"] ?? "";
-
 $rol = $usuario["rol"] ?? "Usuario";
 
-
-// Inicial del usuario para el avatar
-
-$inicial = strtoupper(
-    substr($nombre, 0, 1)
+$inicial = mb_strtoupper(
+    mb_substr($nombre, 0, 1, "UTF-8"),
+    "UTF-8"
 );
 
 ?>
@@ -73,7 +47,7 @@ $inicial = strtoupper(
 
     <link
         rel="stylesheet"
-        href="../css/Style.css"
+        href="../View/css/Style.css"
     >
 
 
@@ -81,7 +55,7 @@ $inicial = strtoupper(
 
     <link
         rel="stylesheet"
-        href="../css/Tablero.css"
+        href="../View/css/Tablero.css"
     >
 
 </head>
@@ -370,26 +344,16 @@ $inicial = strtoupper(
 
         </nav>
 
-
         <!-- CERRAR SESIÓN -->
-
         <div class="sidebar__bottom">
-
             <a
-                href="../Public/Index.php"
+                href="../Controller/LogoutController.php"
                 class="sidebar__logout"
             >
-
-                <span>
-                    ←
-                </span>
-
+                <span>←</span>
                 Cerrar sesión
-
             </a>
-
         </div>
-
 
     </aside>
 
@@ -1174,7 +1138,7 @@ $inicial = strtoupper(
      JAVASCRIPT
 ====================================================== -->
 
-<script src="../js/Main.js"></script>
+<script src="../View/js/Main.js"></script>
 
 
 </body>

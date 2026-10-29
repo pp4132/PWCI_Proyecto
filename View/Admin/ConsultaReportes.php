@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . "/../../Middleware/AuthMiddleware.php";
 
-AuthMiddleware::requiereRol(["Admin"]);
+AuthMiddleware::requiereRol(["Administrador"]);
 /*
 |--------------------------------------------------------------------------
 | CONSULTA DE REPORTES
