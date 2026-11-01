@@ -173,7 +173,7 @@
                     </p>
                 </div>
                 <a
-                    href="MisCursos.php"
+                    href="<?= url('Controller/MisCursosController.php') ?>"
                     class="btn btn--outline"
                 >
                     ← Volver a mis cursos
@@ -398,87 +398,57 @@
                             </p>
                         </div>
                     </div>
-                    <div class="create-card__body">
-                        <div class="modules">
-                            <?php foreach (
-                                $modulos as $modulo
-                            ): ?>
+                    <div class="create-card__body">                        
+                        <div class="modules" id="modulesContainer">
+                            <?php foreach ($modulos as $i => $modulo): ?>
                                 <div class="module">
                                     <div class="module__header">
                                         <div>
                                             <span>
-                                                MÓDULO
-                                                <?= htmlspecialchars(
-                                                    $modulo["numero"]
-                                                ) ?>
+                                                MÓDULO <?= $i + 1 ?>
                                             </span>
-                                            <h3>
-                                                <?= htmlspecialchars(
-                                                    $modulo["titulo"]
-                                                ) ?>
-                                            </h3>
+                                            <input
+                                                type="text"
+                                                name="modulos[<?= $i ?>][titulo]"
+                                                value="<?= htmlspecialchars($modulo['titulo'] ?? '') ?>"
+                                                placeholder="Nombre del módulo"
+                                                maxlength="200"
+                                                required
+                                            >
                                         </div>
-
                                         <button
                                             type="button"
-                                            class="module__menu"
-                                            aria-label="Opciones del módulo"
+                                            class="module__menu remove-module"
+                                            aria-label="Eliminar módulo"
                                         >
-                                            ⋮
+                                            ×
                                         </button>
                                     </div>
-
                                     <div class="module__lessons">
-
-
-                                        <?php foreach (
-                                            $modulo["lecciones"]
-                                            as $leccion
-                                        ): ?>
-
-
+                                        <?php foreach (($modulo['lecciones'] ?? []) as $leccion): ?>
                                             <div class="lesson">
-
-
-                                                <span class="lesson__drag">
-                                                    ☰
-                                                </span>
-
-
-                                                <span class="lesson__icon">
-                                                    ▶
-                                                </span>
-
-
-                                                <span class="lesson__title">
-
-                                                    <?= htmlspecialchars(
-                                                        $leccion
-                                                    ) ?>
-
-                                                </span>
-
-
+                                                <span class="lesson__icon">▶</span>
+                                                <input
+                                                    type="text"
+                                                    name="modulos[<?= $i ?>][lecciones][]"
+                                                    value="<?= htmlspecialchars($leccion) ?>"
+                                                    placeholder="Nombre de la lección"
+                                                    maxlength="200"
+                                                    required
+                                                >
                                                 <button
                                                     type="button"
-                                                    class="lesson__menu"
-                                                    aria-label="Opciones de lección"
+                                                    class="lesson__menu remove-lesson"
+                                                    aria-label="Eliminar lección"
                                                 >
-                                                    ⋮
+                                                    ×
                                                 </button>
-
-
                                             </div>
-
-
                                         <?php endforeach; ?>
-
-
                                     </div>
                                     <button
                                         type="button"
                                         class="add-lesson"
-                                        
                                     >
                                         ＋ Agregar lección
                                     </button>
@@ -536,6 +506,24 @@
                         </div>
                     </div>
                 </section>
+
+                <!-- =============================================
+                    ACCIONES
+                ============================================== -->
+                <div class="create-course__actions">
+                    <a
+                        href="<?= url('Controller/MisCursosController.php') ?>"
+                        class="btn btn--secondary btn--large"
+                    >
+                        Cancelar
+                    </a>
+                    <button
+                        type="submit"
+                        class="btn btn--primary btn--large"
+                    >
+                        Publicar curso
+                    </button>
+                </div>
             </form>
         </div>
     </main>
