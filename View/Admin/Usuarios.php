@@ -1,39 +1,13 @@
 <?php
-require_once __DIR__ . "/../../Middleware/AuthMiddleware.php";
+require_once __DIR__ . '/../../config.php';
 
-AuthMiddleware::requiereRol(["Admin"]);
+$usuario = $datos['usuario'] ?? [];
 
-/*
-|--------------------------------------------------------------------------
-| GESTIÓN DE USUARIOS
-|--------------------------------------------------------------------------
-|
-| Esta vista recibe toda la información desde el Controller.
-|
-| Datos esperados:
-|
-| $datos["usuario"]
-| $datos["usuarios"]
-|
-|--------------------------------------------------------------------------
-*/
-
-
-$usuario = $datos["usuario"] ?? [];
-
-$usuarios = $datos["usuarios"] ?? [];
-
-
-// =====================================================
-// DATOS DEL ADMINISTRADOR
-// =====================================================
-
-$nombre = $usuario["nombre"] ?? "Administrador";
-
-$apellido = $usuario["apellido"] ?? "";
-
-$rol = $usuario["rol"] ?? "Administrador";
-
+$nombre = $usuario['nombre'] ?? '';
+$apellido = $usuario['apellido'] ?? '';
+$correo = $usuario['correo'] ?? '';
+$telefono = $usuario['telefono'] ?? '';
+$rol = $usuario['rol'] ?? '';
 
 $inicial = strtoupper(
     substr($nombre, 0, 1)
@@ -183,27 +157,14 @@ foreach ($usuarios as $item) {
 
 
     <!-- CSS GENERAL -->
+    <link rel="stylesheet"
+        href="<?= url('View/css/Style.css') ?>">
 
-    <link
-        rel="stylesheet"
-        href="../css/Style.css"
-    >
+    <link rel="stylesheet"
+        href="<?= url('View/css/Tablero.css') ?>">
 
-
-    <!-- CSS DEL TABLERO -->
-
-    <link
-        rel="stylesheet"
-        href="../css/Tablero.css"
-    >
-
-
-    <!-- CSS DE USUARIOS -->
-
-    <link
-        rel="stylesheet"
-        href="../css/Usuarios.css"
-    >
+    <link rel="stylesheet"
+        href="<?= url('View/css/Usuarios.css') ?>">
 
 </head>
 
@@ -217,158 +178,7 @@ foreach ($usuarios as $item) {
     <!-- =====================================================
          SIDEBAR
     ====================================================== -->
-
-    <aside class="sidebar">
-
-
-        <!-- LOGO -->
-
-        <div class="sidebar__brand">
-
-            <a
-                href="../Public/Index.php"
-                class="sidebar__logo"
-            >
-                ACADEMIA
-            </a>
-
-        </div>
-
-
-        <!-- PERFIL -->
-
-        <div class="sidebar__profile">
-
-
-            <div class="sidebar__avatar">
-
-                <?= htmlspecialchars($inicial) ?>
-
-            </div>
-
-
-            <div>
-
-                <strong>
-
-                    <?= htmlspecialchars($nombre) ?>
-
-                    <?= htmlspecialchars($apellido) ?>
-
-                </strong>
-
-
-                <span>
-
-                    <?= htmlspecialchars($rol) ?>
-
-                </span>
-
-            </div>
-
-
-        </div>
-
-
-        <!-- NAVEGACIÓN -->
-
-        <nav class="sidebar__nav">
-
-
-            <span class="sidebar__label">
-                PRINCIPAL
-            </span>
-
-
-            <a
-                href="../Compartidas/Tablero.php"
-                class="sidebar__link"
-            >
-
-                <span>▦</span>
-
-                Tablero
-
-            </a>
-
-
-            <a
-                href="Usuarios.php"
-                class="sidebar__link active"
-            >
-
-                <span>◉</span>
-
-                Usuarios
-
-            </a>
-
-
-            <a
-                href="ConsultaReportes.php"
-                class="sidebar__link"
-            >
-
-                <span>▤</span>
-
-                Reportes
-
-            </a>
-
-
-            <a
-                href="../Compartidas/ChatCurso.php"
-                class="sidebar__link"
-            >
-
-                <span>◌</span>
-
-                Chat
-
-            </a>
-
-
-            <span class="sidebar__label">
-                CUENTA
-            </span>
-
-
-            <a
-                href="../Compartidas/Perfil.php"
-                class="sidebar__link"
-            >
-
-                <span>⚙</span>
-
-                Mi perfil
-
-            </a>
-
-
-        </nav>
-
-
-        <!-- CERRAR SESIÓN -->
-
-        <div class="sidebar__bottom">
-
-            <a
-                href="../Public/Index.php"
-                class="sidebar__logout"
-            >
-
-                <span>←</span>
-
-                Cerrar sesión
-
-            </a>
-
-        </div>
-
-
-    </aside>
-
-
+    <?php require_once __DIR__ . '/../Compartidas/SideBar.php'; ?>
 
     <!-- =====================================================
          CONTENIDO PRINCIPAL
@@ -1062,11 +872,7 @@ foreach ($usuarios as $item) {
 
 </div>
 
-
-
-<script src="../js/Main.js"></script>
-
-
+<script src="<?= url('View/js/Main.js') ?>"></script>
 </body>
 
 </html>

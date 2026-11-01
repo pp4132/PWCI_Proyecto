@@ -1,49 +1,22 @@
 <?php
-require_once __DIR__ . "/../../Middleware/AuthMiddleware.php";
-AuthMiddleware::requiereRol([
-    "Admin",
-    "Instructor",
-    "Estudiante"
-]);
+
+require_once __DIR__ . '/../../config.php';
+
 /*
-|--------------------------------------------------------------------------
-| PERFIL
-|--------------------------------------------------------------------------
-|
-| Esta vista es compartida por:
-|
-| - Estudiante
-| - Instructor
-| - Administrador
-|
-| Toda la información debe llegar desde el Controller.
-|
-|--------------------------------------------------------------------------
-*/
+ * Los datos llegan desde PerfilController.php.
+ */
 
+$usuario = $datos['usuario'] ?? [];
 
-$usuario = $datos["usuario"] ?? [];
-
-
-// Información del usuario
-
-$nombre = $usuario["nombre"] ?? "";
-
-$apellido = $usuario["apellido"] ?? "";
-
-$correo = $usuario["correo"] ?? "";
-
-$telefono = $usuario["telefono"] ?? "";
-
-$rol = $usuario["rol"] ?? "Usuario";
-
-
-// Inicial para el avatar
+$nombre = $usuario['nombre'] ?? '';
+$apellido = $usuario['apellido'] ?? '';
+$correo = $usuario['correo'] ?? '';
+$telefono = $usuario['telefono'] ?? '';
+$rol = $usuario['rol'] ?? '';
 
 $inicial = strtoupper(
     substr($nombre, 0, 1)
 );
-
 ?>
 
 <!DOCTYPE html>
@@ -65,27 +38,14 @@ $inicial = strtoupper(
 
 
     <!-- CSS GENERAL -->
+    <link rel="stylesheet"
+        href="<?= url('View/css/Style.css') ?>">
 
-    <link
-        rel="stylesheet"
-        href="../css/Style.css"
-    >
+    <link rel="stylesheet"
+        href="<?= url('View/css/Tablero.css') ?>">
 
-
-    <!-- CSS DEL TABLERO -->
-
-    <link
-        rel="stylesheet"
-        href="../css/Tablero.css"
-    >
-
-
-    <!-- CSS DEL PERFIL -->
-
-    <link
-        rel="stylesheet"
-        href="../css/Perfil.css"
-    >
+    <link rel="stylesheet"
+        href="<?= url('View/css/Perfil.css') ?>">
 
 </head>
 
@@ -99,298 +59,7 @@ $inicial = strtoupper(
     <!-- =====================================================
          SIDEBAR
     ====================================================== -->
-
-    <aside class="sidebar">
-
-
-        <!-- LOGO -->
-
-        <div class="sidebar__brand">
-
-            <a
-                href="../Public/Index.php"
-                class="sidebar__logo"
-            >
-                ACADEMIA
-            </a>
-
-        </div>
-
-
-        <!-- PERFIL -->
-
-        <div class="sidebar__profile">
-
-
-            <div class="sidebar__avatar">
-
-                <?= htmlspecialchars($inicial) ?>
-
-            </div>
-
-
-            <div>
-
-                <strong>
-
-                    <?= htmlspecialchars($nombre) ?>
-
-                    <?= htmlspecialchars($apellido) ?>
-
-                </strong>
-
-
-                <span>
-
-                    <?= htmlspecialchars($rol) ?>
-
-                </span>
-
-            </div>
-
-
-        </div>
-
-
-        <!-- =================================================
-             NAVEGACIÓN
-        ================================================== -->
-
-        <nav class="sidebar__nav">
-
-
-            <span class="sidebar__label">
-                PRINCIPAL
-            </span>
-
-
-            <!-- TABLERO -->
-
-            <a
-                href="Tablero.php"
-                class="sidebar__link"
-            >
-
-                <span>
-                    ▦
-                </span>
-
-                Tablero
-
-            </a>
-
-
-            <!-- OPCIONES DEL ESTUDIANTE -->
-
-            <?php if ($rol === "Estudiante"): ?>
-
-
-                <a
-                    href="../Estudiante/Cursos.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ▣
-                    </span>
-
-                    Mis cursos
-
-                </a>
-
-
-                <a
-                    href="../Estudiante/Kardex.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ▤
-                    </span>
-
-                    Kardex
-
-                </a>
-
-
-                <a
-                    href="../Estudiante/ChatCurso.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ◌
-                    </span>
-
-                    Chat
-
-                </a>
-
-
-            <?php endif; ?>
-
-
-            <!-- OPCIONES DEL INSTRUCTOR -->
-
-            <?php if ($rol === "Instructor"): ?>
-
-
-                <a
-                    href="../Instructor/MisCursos.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ▣
-                    </span>
-
-                    Mis cursos
-
-                </a>
-
-
-                <a
-                    href="../Instructor/CreacionCurso.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ＋
-                    </span>
-
-                    Crear curso
-
-                </a>
-
-
-                <a
-                    href="../Instructor/Ventas.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        $
-                    </span>
-
-                    Ventas
-
-                </a>
-
-
-                <a
-                    href="../Instructor/ChatCurso.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ◌
-                    </span>
-
-                    Chat
-
-                </a>
-
-
-            <?php endif; ?>
-
-
-            <!-- OPCIONES DEL ADMINISTRADOR -->
-
-            <?php if ($rol === "Administrador"): ?>
-
-
-                <a
-                    href="../Admin/Usuarios.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ◉
-                    </span>
-
-                    Usuarios
-
-                </a>
-
-
-                <a
-                    href="../Admin/ConsultaReportes.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ▤
-                    </span>
-
-                    Reportes
-
-                </a>
-
-
-                <a
-                    href="../Admin/ChatCurso.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ◌
-                    </span>
-
-                    Chat
-
-                </a>
-
-
-            <?php endif; ?>
-
-
-            <span class="sidebar__label">
-                CUENTA
-            </span>
-
-
-            <!-- PERFIL ACTIVO -->
-
-            <a
-                href="Perfil.php"
-                class="sidebar__link active"
-            >
-
-                <span>
-                    ⚙
-                </span>
-
-                Mi perfil
-
-            </a>
-
-
-        </nav>
-
-
-        <!-- CERRAR SESIÓN -->
-
-        <div class="sidebar__bottom">
-
-            <a
-                href="../Public/Index.php"
-                class="sidebar__logout"
-            >
-
-                <span>
-                    ←
-                </span>
-
-                Cerrar sesión
-
-            </a>
-
-        </div>
-
-
-    </aside>
-
-
+    <?php require_once __DIR__ . "/SideBar.php"; ?>
 
     <!-- =====================================================
          CONTENIDO PRINCIPAL
@@ -895,9 +564,7 @@ $inicial = strtoupper(
 
 
 <!-- JAVASCRIPT -->
-
-<script src="../js/Main.js"></script>
-
+<script src="<?= url('View/js/Main.js') ?>"></script>
 </body>
 
 </html>

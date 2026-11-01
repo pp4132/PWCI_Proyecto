@@ -1,24 +1,18 @@
 <?php
-require_once __DIR__ . "/../../Middleware/AuthMiddleware.php";
-AuthMiddleware::requiereRol(["Instructor"]);
+require_once __DIR__ . '/../../config.php';
 
 /*
-|--------------------------------------------------------------------------
-| MIS CURSOS - INSTRUCTOR
-|--------------------------------------------------------------------------
-|
-| Por ahora se utilizan datos de ejemplo únicamente para visualizar
-| el diseño de la interfaz.
-|
-| Posteriormente estos datos serán proporcionados por el Controller.
-|
-|--------------------------------------------------------------------------
-*/
+ * Los datos llegan desde PerfilController.php.
+ */
 
+$usuario = $datos['usuario'] ?? [];
 
-$nombre = "Carlos";
-$apellido = "Ramírez";
-$rol = "Instructor";
+$nombre = $usuario['nombre'] ?? '';
+$apellido = $usuario['apellido'] ?? '';
+$correo = $usuario['correo'] ?? '';
+$telefono = $usuario['telefono'] ?? '';
+$rol = $usuario['rol'] ?? '';
+
 
 $inicial = strtoupper(
     substr($nombre, 0, 1)
@@ -92,27 +86,14 @@ $cursos = [
 
 
     <!-- CSS GENERAL -->
+     <link rel="stylesheet"
+        href="<?= url('View/css/Style.css') ?>">
 
-    <link
-        rel="stylesheet"
-        href="../css/Style.css"
-    >
+    <link rel="stylesheet"
+        href="<?= url('View/css/Tablero.css') ?>">
 
-
-    <!-- CSS DEL DASHBOARD -->
-
-    <link
-        rel="stylesheet"
-        href="../css/Tablero.css"
-    >
-
-
-    <!-- CSS DE MIS CURSOS -->
-
-    <link
-        rel="stylesheet"
-        href="../css/MisCursos.css"
-    >
+    <link rel="stylesheet"
+        href="<?= url('View/css/MisCursos.css') ?>">
 
 </head>
 
@@ -126,170 +107,7 @@ $cursos = [
     <!-- =====================================================
          SIDEBAR
     ====================================================== -->
-
-    <aside class="sidebar">
-
-
-        <!-- LOGO -->
-
-        <div class="sidebar__brand">
-
-            <a
-                href="../Public/Index.php"
-                class="sidebar__logo"
-            >
-                ACADEMIA
-            </a>
-
-        </div>
-
-
-        <!-- PERFIL -->
-
-        <div class="sidebar__profile">
-
-
-            <div class="sidebar__avatar">
-
-                <?= htmlspecialchars($inicial) ?>
-
-            </div>
-
-
-            <div>
-
-                <strong>
-
-                    <?= htmlspecialchars($nombre) ?>
-
-                    <?= htmlspecialchars($apellido) ?>
-
-                </strong>
-
-
-                <span>
-
-                    <?= htmlspecialchars($rol) ?>
-
-                </span>
-
-            </div>
-
-
-        </div>
-
-
-        <!-- NAVEGACIÓN -->
-
-        <nav class="sidebar__nav">
-
-
-            <span class="sidebar__label">
-                PRINCIPAL
-            </span>
-
-
-            <a
-                href="../Compartidas/Tablero.php"
-                class="sidebar__link"
-            >
-
-                <span>▦</span>
-
-                Tablero
-
-            </a>
-
-
-            <a
-                href="MisCursos.php"
-                class="sidebar__link active"
-            >
-
-                <span>▣</span>
-
-                Mis cursos
-
-            </a>
-
-
-            <a
-                href="CreacionCurso.php"
-                class="sidebar__link"
-            >
-
-                <span>＋</span>
-
-                Crear curso
-
-            </a>
-
-
-            <a
-                href="Ventas.php"
-                class="sidebar__link"
-            >
-
-                <span>$</span>
-
-                Ventas
-
-            </a>
-
-
-            <a
-                href="ChatCurso.php"
-                class="sidebar__link"
-            >
-
-                <span>◌</span>
-
-                Chat
-
-            </a>
-
-
-            <span class="sidebar__label">
-                CUENTA
-            </span>
-
-
-            <a
-                href="../Compartidas/Perfil.php"
-                class="sidebar__link"
-            >
-
-                <span>⚙</span>
-
-                Mi perfil
-
-            </a>
-
-
-        </nav>
-
-
-        <!-- CERRAR SESIÓN -->
-
-        <div class="sidebar__bottom">
-
-            <a
-                href="../Public/Index.php"
-                class="sidebar__logout"
-            >
-
-                <span>←</span>
-
-                Cerrar sesión
-
-            </a>
-
-        </div>
-
-
-    </aside>
-
-
+    <?php require_once __DIR__ . "/../Compartidas/SideBar.php"; ?>
 
     <!-- =====================================================
          CONTENIDO PRINCIPAL
@@ -764,21 +582,11 @@ $cursos = [
 
 
             </section>
-
-
         </div>
-
-
     </main>
-
-
 </div>
 
-
-
-<script src="../js/Main.js"></script>
-
-
+<script src="<?= url('View/js/Main.js') ?>"></script>
 </body>
 
 </html>

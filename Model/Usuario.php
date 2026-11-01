@@ -113,4 +113,27 @@ class Usuario
         return $usuario;
     }
     
+      public function obtenerPorId(int $idUsuario): ?array
+    {
+        $sql = "SELECT
+                    id_usuario,
+                    nombre,
+                    apellidos,
+                    email,
+                    id_rol,
+                    estatus
+                FROM usuarios
+                WHERE id_usuario = :id
+                LIMIT 1";
+
+        $stmt = $this->conexion->prepare($sql);
+
+        $stmt->execute([
+            'id' => $idUsuario
+        ]);
+
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $usuario ?: null;
+    }
 }

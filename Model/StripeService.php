@@ -6,11 +6,19 @@ class StripeService
     private string $secretKey;
     private string $baseUrl;
 
-    public function __construct(string $secretKey, string $baseUrl)
-    {
+    public function __construct(
+        string $secretKey,
+        string $baseUrl
+    ) {
         if ($secretKey === '') {
             throw new RuntimeException(
                 'La clave secreta de Stripe no está configurada.'
+            );
+        }
+
+        if (!filter_var($baseUrl, FILTER_VALIDATE_URL)) {
+            throw new InvalidArgumentException(
+                'La URL base no es válida.'
             );
         }
 
@@ -23,46 +31,78 @@ class StripeService
         int $idEstudiante,
         string $nombreCurso,
         float $precio,
-        string $email = ''
+        string $email = '',
+        ?string $idempotencyKey = null
     ): array {
-        if ($precio <= 0 || !is_finite($precio)) {
+
+        if ($idCurso <= 0 || $idEstudiante <= 0) {
             throw new InvalidArgumentException(
-                'El precio del curso no es válido.'
+                'Los identificadores no son válidos.'
+            );
+        }
+
+        if (
+            trim($nombreCurso) === ''
+            || $precio <= 0
+            || !is_finite($precio)
+        ) {
+            throw new InvalidArgumentException(
+                'Los datos del curso no son válidos.'
             );
         }
 
         if (!extension_loaded('curl')) {
             throw new RuntimeException(
-                'La extensión cURL de PHP no está habilitada.'
+                'La extensión cURL no está habilitada.'
             );
         }
 
-        // MXN usa dos decimales.
         $importe = (int) round($precio * 100);
 
         if ($importe <= 0) {
             throw new InvalidArgumentException(
-                'El importe de pago no es válido.'
+                'El importe no es válido.'
+            );
+        }
+
+        if (
+            $idempotencyKey !== null
+            && (
+                strlen($idempotencyKey) > 255
+                || trim($idempotencyKey) === ''
+            )
+        ) {
+            throw new InvalidArgumentException(
+                'La clave de idempotencia no es válida.'
             );
         }
 
         $datos = [
             'mode' => 'payment',
-            'client_reference_id' => (string) $idEstudiante,
+
+            'client_reference_id' =>
+                (string) $idEstudiante,
 
             'line_items[0][price_data][currency]' => 'mxn',
-            'line_items[0][price_data][unit_amount]' => $importe,
-            'line_items[0][price_data][product_data][name]'
-                => $nombreCurso,
+
+            'line_items[0][price_data][unit_amount]' =>
+                $importe,
+
+            'line_items[0][price_data][product_data][name]' =>
+                $nombreCurso,
+
             'line_items[0][quantity]' => 1,
 
             'metadata[id_curso]' => (string) $idCurso,
-            'metadata[id_estudiante]' => (string) $idEstudiante,
 
-            'payment_intent_data[metadata][id_curso]'
-                => (string) $idCurso,
-            'payment_intent_data[metadata][id_estudiante]'
-                => (string) $idEstudiante,
+            'metadata[id_estudiante]' =>
+                (string) $idEstudiante,
+
+            'payment_intent_data[metadata][id_curso]' =>
+                (string) $idCurso,
+
+            'payment_intent_data[metadata][id_estudiante]' =>
+                (string) $idEstudiante,
 
             'success_url' =>
                 $this->baseUrl
@@ -76,8 +116,20 @@ class StripeService
                 . '&pago=cancelado',
         ];
 
-        if ($email !== '' && filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (
+            $email !== ''
+            && filter_var($email, FILTER_VALIDATE_EMAIL)
+        ) {
             $datos['customer_email'] = $email;
+        }
+
+        $headers = [
+            'Content-Type: application/x-www-form-urlencoded'
+        ];
+
+        if ($idempotencyKey !== null) {
+            $headers[] =
+                'Idempotency-Key: ' . $idempotencyKey;
         }
 
         $ch = curl_init(
@@ -90,6 +142,7 @@ class StripeService
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_USERPWD => $this->secretKey . ':',
             CURLOPT_HTTPAUTH => CURLAUTH_BASIC,
+            CURLOPT_HTTPHEADER => $headers,
             CURLOPT_CONNECTTIMEOUT => 10,
             CURLOPT_TIMEOUT => 30,
             CURLOPT_SSL_VERIFYPEER => true,
@@ -97,7 +150,12 @@ class StripeService
         ]);
 
         $respuesta = curl_exec($ch);
-        $codigo = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        $codigo = curl_getinfo(
+            $ch,
+            CURLINFO_HTTP_CODE
+        );
+
         $error = curl_error($ch);
 
         curl_close($ch);

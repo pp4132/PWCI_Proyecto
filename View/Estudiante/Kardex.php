@@ -1,40 +1,21 @@
 <?php
-require_once __DIR__ . "/../../Middleware/AuthMiddleware.php";
+require_once __DIR__ . '/../../config.php';
 
-AuthMiddleware::requiereRol(["Estudiante"]);
 /*
-|--------------------------------------------------------------------------
-| KARDEX DEL ESTUDIANTE
-|--------------------------------------------------------------------------
-|
-| Esta vista recibe la información desde el Controller.
-|
-| Datos esperados:
-|
-| $datos["usuario"]
-| $datos["kardex"]
-| $datos["certificados"]
-|
-|--------------------------------------------------------------------------
-*/
+ * Los datos llegan desde PerfilController.php.
+ */
 
+$usuario = $datos['usuario'] ?? [];
 
-$usuario = $datos["usuario"] ?? [];
+$nombre = $usuario['nombre'] ?? '';
+$apellido = $usuario['apellido'] ?? '';
+$correo = $usuario['correo'] ?? '';
+$telefono = $usuario['telefono'] ?? '';
+$rol = $usuario['rol'] ?? '';
 
 $kardex = $datos["kardex"] ?? [];
 
 $certificados = $datos["certificados"] ?? [];
-
-
-// =====================================================
-// DATOS DEL USUARIO
-// =====================================================
-
-$nombre = $usuario["nombre"] ?? "Estudiante";
-
-$apellido = $usuario["apellido"] ?? "";
-
-$rol = $usuario["rol"] ?? "Estudiante";
 
 
 $inicial = strtoupper(
@@ -201,27 +182,18 @@ $totalCertificados = count($certificados);
 
 
     <!-- CSS GENERAL -->
-
-    <link
-        rel="stylesheet"
-        href="../css/Style.css"
-    >
+    <link rel="stylesheet"
+        href="<?= url('View/css/Style.css') ?>">
 
 
     <!-- CSS DEL TABLERO -->
-
-    <link
-        rel="stylesheet"
-        href="../css/Tablero.css"
-    >
+    <link rel="stylesheet"
+        href="<?= url('View/css/Tablero.css') ?>">
 
 
     <!-- CSS DEL KARDEX -->
-
-    <link
-        rel="stylesheet"
-        href="../css/Kardex.css"
-    >
+    <link rel="stylesheet"
+        href="<?= url('View/css/Kardex.css') ?>">
 
 </head>
 
@@ -235,158 +207,7 @@ $totalCertificados = count($certificados);
     <!-- =====================================================
          SIDEBAR
     ====================================================== -->
-
-    <aside class="sidebar">
-
-
-        <!-- LOGO -->
-
-        <div class="sidebar__brand">
-
-            <a
-                href="../Public/Index.php"
-                class="sidebar__logo"
-            >
-                ACADEMIA
-            </a>
-
-        </div>
-
-
-        <!-- PERFIL -->
-
-        <div class="sidebar__profile">
-
-
-            <div class="sidebar__avatar">
-
-                <?= htmlspecialchars($inicial) ?>
-
-            </div>
-
-
-            <div>
-
-                <strong>
-
-                    <?= htmlspecialchars($nombre) ?>
-
-                    <?= htmlspecialchars($apellido) ?>
-
-                </strong>
-
-
-                <span>
-
-                    <?= htmlspecialchars($rol) ?>
-
-                </span>
-
-            </div>
-
-
-        </div>
-
-
-        <!-- NAVEGACIÓN -->
-
-        <nav class="sidebar__nav">
-
-
-            <span class="sidebar__label">
-                PRINCIPAL
-            </span>
-
-
-            <a
-                href="../Compartidas/Tablero.php"
-                class="sidebar__link"
-            >
-
-                <span>▦</span>
-
-                Tablero
-
-            </a>
-
-
-            <a
-                href="Cursos.php"
-                class="sidebar__link"
-            >
-
-                <span>▣</span>
-
-                Mis cursos
-
-            </a>
-
-
-            <a
-                href="Kardex.php"
-                class="sidebar__link active"
-            >
-
-                <span>▤</span>
-
-                Kardex
-
-            </a>
-
-
-            <a
-                href="../Compartidas/ChatCurso.php"
-                class="sidebar__link"
-            >
-
-                <span>◌</span>
-
-                Chat
-
-            </a>
-
-
-            <span class="sidebar__label">
-                CUENTA
-            </span>
-
-
-            <a
-                href="../Compartidas/Perfil.php"
-                class="sidebar__link"
-            >
-
-                <span>⚙</span>
-
-                Mi perfil
-
-            </a>
-
-
-        </nav>
-
-
-        <!-- CERRAR SESIÓN -->
-
-        <div class="sidebar__bottom">
-
-            <a
-                href="../Public/Index.php"
-                class="sidebar__logout"
-            >
-
-                <span>←</span>
-
-                Cerrar sesión
-
-            </a>
-
-        </div>
-
-
-    </aside>
-
-
+    <?php require_once __DIR__ . "/../Compartidas/SideBar.php"; ?>
 
     <!-- =====================================================
          CONTENIDO PRINCIPAL
@@ -1077,8 +898,7 @@ $totalCertificados = count($certificados);
 
 
 
-<script src="../js/Main.js"></script>
-
+<script src="<?= url('View/js/Main.js') ?>"></script>
 
 </body>
 

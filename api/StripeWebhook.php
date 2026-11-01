@@ -118,7 +118,8 @@ try {
     if (!in_array($tipo, [
         'checkout.session.completed',
         'checkout.session.async_payment_succeeded',
-        'checkout.session.async_payment_failed'
+        'checkout.session.async_payment_failed',
+        'checkout.session.expired'
     ], true)) {
         responder(200, [
             'success' => true,
@@ -128,6 +129,14 @@ try {
 
     $sessionId = $sesion['id'] ?? '';
 
+    if (
+        ($sesion['object'] ?? '') !== 'checkout.session'
+    ) {
+        responder(400, [
+            'success' => false,
+            'message' => 'El objeto recibido no es una sesión de Checkout.'
+        ]);
+    }
     if ($sessionId === '') {
         responder(400, [
             'success' => false,
@@ -140,12 +149,16 @@ try {
 
     $controller = new ApiPagosController($pdo);
 
-    if ($tipo === 'checkout.session.async_payment_failed') {
+    if (in_array($tipo, [
+        'checkout.session.async_payment_failed',
+        'checkout.session.expired'
+    ], true)) {
+
         $controller->marcarFallido($sessionId);
 
         responder(200, [
             'success' => true,
-            'message' => 'Pago fallido registrado.'
+            'message' => 'Estado del pago actualizado.'
         ]);
     }
 

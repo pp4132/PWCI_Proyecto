@@ -1,66 +1,26 @@
 <?php
-require_once __DIR__ . "/../../Middleware/AuthMiddleware.php";
-AuthMiddleware::requiereRol(["Instructor"]);
 
-/*
-|--------------------------------------------------------------------------
-| CREACIÓN DE CURSO - INSTRUCTOR
-|--------------------------------------------------------------------------
-|
-| Por ahora esta vista utiliza información de ejemplo únicamente
-| para visualizar el diseño.
-|
-| Posteriormente los datos serán proporcionados por el Controller.
-|
-|--------------------------------------------------------------------------
-*/
+    require_once __DIR__ . '/../../config.php';
 
+    $usuario = $datos['usuario'] ?? [];
 
-$nombre = "Carlos";
-$apellido = "Ramírez";
-$rol = "Instructor";
+    $nombre = $usuario['nombre'] ?? '';
+    $apellido = $usuario['apellido'] ?? '';
+    $correo = $usuario['correo'] ?? '';
+    $rol = $usuario['rol'] ?? '';
 
-$inicial = strtoupper(
-    substr($nombre, 0, 1)
-);
+    $inicial = strtoupper(substr($nombre, 0, 1));
 
+    $modulos = $valores['modulos'] ?? [];
 
-// Datos de ejemplo
-
-$curso = [
-
-    "titulo" => "",
-    "descripcion" => "",
-    "categoria" => "Seleccionar categoría",
-    "nivel" => "Seleccionar nivel",
-    "precio" => ""
-
-];
-
-
-$modulos = [
-
-    [
-        "numero" => 1,
-        "titulo" => "Introducción a PHP",
-        "lecciones" => [
-            "¿Qué es PHP?",
-            "Instalación y configuración",
-            "Primer programa en PHP"
-        ]
-    ],
-
-    [
-        "numero" => 2,
-        "titulo" => "Fundamentos de PHP",
-        "lecciones" => [
-            "Variables y constantes",
-            "Tipos de datos",
-            "Operadores"
-        ]
-    ]
-
-];
+    if (empty($modulos)) {
+        $modulos = [
+            [
+                'titulo' => '',
+                'lecciones' => ['']
+            ]
+        ];
+    }
 
 ?>
 
@@ -83,27 +43,14 @@ $modulos = [
 
 
     <!-- CSS GENERAL -->
+     <link rel="stylesheet"
+        href="<?= url('View/css/Style.css') ?>">
 
-    <link
-        rel="stylesheet"
-        href="../css/Style.css"
-    >
+    <link rel="stylesheet"
+        href="<?= url('View/css/Tablero.css') ?>">
 
-
-    <!-- CSS DEL DASHBOARD -->
-
-    <link
-        rel="stylesheet"
-        href="../css/Tablero.css"
-    >
-
-
-    <!-- CSS DE CREACIÓN -->
-
-    <link
-        rel="stylesheet"
-        href="../css/CreacionCurso.css"
-    >
+    <link rel="stylesheet"
+        href="<?= url('View/css/CreacionCurso.css') ?>">
 
 </head>
 
@@ -117,170 +64,7 @@ $modulos = [
     <!-- =====================================================
          SIDEBAR
     ====================================================== -->
-
-    <aside class="sidebar">
-
-
-        <!-- LOGO -->
-
-        <div class="sidebar__brand">
-
-            <a
-                href="../Public/Index.php"
-                class="sidebar__logo"
-            >
-                ACADEMIA
-            </a>
-
-        </div>
-
-
-        <!-- PERFIL -->
-
-        <div class="sidebar__profile">
-
-
-            <div class="sidebar__avatar">
-
-                <?= htmlspecialchars($inicial) ?>
-
-            </div>
-
-
-            <div>
-
-                <strong>
-
-                    <?= htmlspecialchars($nombre) ?>
-
-                    <?= htmlspecialchars($apellido) ?>
-
-                </strong>
-
-
-                <span>
-
-                    <?= htmlspecialchars($rol) ?>
-
-                </span>
-
-            </div>
-
-
-        </div>
-
-
-        <!-- NAVEGACIÓN -->
-
-        <nav class="sidebar__nav">
-
-
-            <span class="sidebar__label">
-                PRINCIPAL
-            </span>
-
-
-            <a
-                href="../Compartidas/Tablero.php"
-                class="sidebar__link"
-            >
-
-                <span>▦</span>
-
-                Tablero
-
-            </a>
-
-
-            <a
-                href="MisCursos.php"
-                class="sidebar__link"
-            >
-
-                <span>▣</span>
-
-                Mis cursos
-
-            </a>
-
-
-            <a
-                href="CreacionCurso.php"
-                class="sidebar__link active"
-            >
-
-                <span>＋</span>
-
-                Crear curso
-
-            </a>
-
-
-            <a
-                href="Ventas.php"
-                class="sidebar__link"
-            >
-
-                <span>$</span>
-
-                Ventas
-
-            </a>
-
-
-            <a
-                href="ChatCurso.php"
-                class="sidebar__link"
-            >
-
-                <span>◌</span>
-
-                Chat
-
-            </a>
-
-
-            <span class="sidebar__label">
-                CUENTA
-            </span>
-
-
-            <a
-                href="../Compartidas/Perfil.php"
-                class="sidebar__link"
-            >
-
-                <span>⚙</span>
-
-                Mi perfil
-
-            </a>
-
-
-        </nav>
-
-
-        <!-- CERRAR SESIÓN -->
-
-        <div class="sidebar__bottom">
-
-            <a
-                href="../Public/Index.php"
-                class="sidebar__logout"
-            >
-
-                <span>←</span>
-
-                Cerrar sesión
-
-            </a>
-
-        </div>
-
-
-    </aside>
-
-
+     <?php require_once __DIR__ . "/../Compartidas/SideBar.php"; ?>
 
     <!-- =====================================================
          CONTENIDO PRINCIPAL
@@ -374,383 +158,266 @@ $modulos = [
         ====================================================== -->
 
         <div class="dashboard-content create-course">
-
-
             <!-- ENCABEZADO -->
-
             <section class="create-course__header">
-
-
                 <div>
-
                     <span class="section-tag">
                         INSTRUCTOR
                     </span>
-
-
                     <h1>
                         Crear nuevo curso
                     </h1>
-
-
                     <p>
                         Completa la información de tu curso
                         para comenzar a enseñar.
                     </p>
-
                 </div>
-
-
                 <a
                     href="MisCursos.php"
                     class="btn btn--outline"
                 >
                     ← Volver a mis cursos
                 </a>
-
-
             </section>
-
-
 
             <!-- =================================================
                  FORMULARIO
             ================================================== -->
-
-            <form
-                action="#"
-                method="POST"
-                class="create-course__form"
-            >
-
+                <form
+                    action="<?= url('Controller/CursoController.php') ?>"
+                    method="POST"
+                    enctype="multipart/form-data"
+                    class="create-course__form"
+                >
+                    <input
+                        type="hidden"
+                        name="csrf_token"
+                        value="<?= htmlspecialchars($csrfToken) ?>"
+                    >
+                    <!--Mensajes de error-->
+                    <?php if (!empty($mensaje)): ?>
+                        <div class="alert alert-success">
+                            <?= htmlspecialchars($mensaje) ?>
+                        </div>
+                    <?php endif; ?>
+                    <?php if (!empty($errores)): ?>
+                        <div class="alert alert-error">
+                            <?php foreach ($errores as $error): ?>
+                                <p>
+                                    <?= htmlspecialchars($error) ?>
+                                </p>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
 
                 <!-- =============================================
                      INFORMACIÓN BÁSICA
                 ============================================== -->
-
                 <section class="create-card">
-
-
                     <div class="create-card__header">
-
-
                         <div class="create-card__number">
                             01
                         </div>
-
-
                         <div>
-
                             <h2>
                                 Información básica
                             </h2>
-
-
                             <p>
                                 Presenta tu curso a los estudiantes.
                             </p>
-
                         </div>
-
-
                     </div>
-
-
                     <div class="create-card__body">
-
-
                         <!-- TÍTULO -->
-
                         <div class="form-group">
-
-
                             <label for="titulo">
                                 Título del curso
                             </label>
-
-
                             <input
                                 type="text"
                                 id="titulo"
                                 name="titulo"
+                                maxlength="200"
+                                required
                                 placeholder="Ej. PHP desde cero"
-                                value="<?= htmlspecialchars(
-                                    $curso["titulo"]
-                                ) ?>"
+                                value="<?= htmlspecialchars($valores['titulo'] ?? '') ?>"
                             >
-
-
                             <small>
                                 Utiliza un título claro y descriptivo.
                             </small>
-
                         </div>
 
-
-
                         <!-- DESCRIPCIÓN -->
-
                         <div class="form-group">
-
-
                             <label for="descripcion">
                                 Descripción
                             </label>
-
-
                             <textarea
                                 id="descripcion"
                                 name="descripcion"
                                 rows="5"
+                                required
                                 placeholder="Describe de qué trata tu curso..."
-                            ><?= htmlspecialchars(
-                                $curso["descripcion"]
-                            ) ?></textarea>
-
-
+                            ><?= htmlspecialchars($valores['descripcion'] ?? '') ?>
+                            </textarea>
                             <small>
                                 Explica qué aprenderán los estudiantes.
                             </small>
-
                         </div>
 
-
-
                         <!-- CATEGORÍA / NIVEL -->
-
                         <div class="form-grid">
-
-
                             <div class="form-group">
-
-
                                 <label for="categoria">
                                     Categoría
                                 </label>
-
-
                                 <select
                                     id="categoria"
                                     name="categoria"
+                                    required
                                 >
-
-                                    <option>
+                                    <option value="">
                                         Seleccionar categoría
                                     </option>
-
-                                    <option>
-                                        Programación
-                                    </option>
-
-                                    <option>
-                                        Diseño
-                                    </option>
-
-                                    <option>
-                                        Marketing
-                                    </option>
-
-                                    <option>
-                                        Negocios
-                                    </option>
-
-                                    <option>
-                                        Fotografía
-                                    </option>
-
+                                    <?php foreach ($categorias as $categoria): ?>
+                                        <option
+                                            value="<?= (int)$categoria['id_categoria'] ?>"
+                                            <?= (
+                                                (string)($valores['categoria'] ?? '') ===
+                                                (string)$categoria['id_categoria']
+                                            ) ? 'selected' : '' ?>
+                                        >
+                                            <?= htmlspecialchars(
+                                                $categoria['nombre_categoria']
+                                            ) ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
-
                             </div>
 
-
-
                             <div class="form-group">
-
-
                                 <label for="nivel">
                                     Nivel
                                 </label>
-
-
                                 <select
                                     id="nivel"
                                     name="nivel"
+                                    required
                                 >
-
-                                    <option>
+                                    <?php
+                                    $niveles = [
+                                        'Principiante',
+                                        'Intermedio',
+                                        'Avanzado'
+                                    ];
+                                    ?>
+                                    <option value="">
                                         Seleccionar nivel
                                     </option>
-
-                                    <option>
-                                        Principiante
-                                    </option>
-
-                                    <option>
-                                        Intermedio
-                                    </option>
-
-                                    <option>
-                                        Avanzado
-                                    </option>
-
+                                    <?php foreach ($niveles as $nivel): ?>
+                                        <option
+                                            value="<?= $nivel ?>"
+                                            <?= ($valores['nivel'] ?? '') === $nivel
+                                                ? 'selected'
+                                                : '' ?>
+                                        >
+                                            <?= $nivel ?>
+                                        </option>
+                                    <?php endforeach; ?>
                                 </select>
-
                             </div>
-
-
                         </div>
-
-
                     </div>
-
-
                 </section>
 
-
-
                 <!-- =============================================
-                     IMAGEN
+                    VIDEO DE PRESENTACIÓN
                 ============================================== -->
-
                 <section class="create-card">
-
-
                     <div class="create-card__header">
-
-
                         <div class="create-card__number">
                             02
                         </div>
-
-
                         <div>
-
                             <h2>
-                                Imagen del curso
+                                Video de presentación
                             </h2>
-
-
                             <p>
-                                Agrega una imagen que represente tu curso.
+                                Presenta tu curso a los estudiantes.
                             </p>
-
                         </div>
-
-
                     </div>
-
 
                     <div class="create-card__body">
-
-
                         <label
-                            for="imagen"
+                            for="video"
                             class="course-upload"
                         >
-
-
                             <div class="course-upload__icon">
-                                ＋
+                                ▶
                             </div>
-
-
                             <strong>
-                                Subir imagen
+                                Seleccionar video
                             </strong>
-
-
                             <span>
-                                PNG, JPG o WEBP · Máximo 5 MB
+                                MP4 o WEBM · Máximo 100 MB
                             </span>
-
-
                             <input
                                 type="file"
-                                id="imagen"
-                                name="imagen"
-                                accept="image/png,image/jpeg,image/webp"
+                                id="video"
+                                name="video"
+                                accept="video/mp4,video/webm"
+                                required
                             >
-
-
                         </label>
-
-
+                        <div id="videoPreviewContainer" hidden>
+                            <video
+                                id="videoPreview"
+                                controls
+                                style="width:100%; max-height:350px; margin-top:20px;"
+                            ></video>
+                            <p id="videoName"></p>
+                        </div>
                     </div>
-
-
                 </section>
-
-
 
                 <!-- =============================================
                      CONTENIDO
                 ============================================== -->
-
                 <section class="create-card">
-
-
                     <div class="create-card__header">
-
-
                         <div class="create-card__number">
                             03
                         </div>
-
-
                         <div>
-
                             <h2>
                                 Contenido del curso
                             </h2>
-
-
                             <p>
                                 Organiza las lecciones en módulos.
                             </p>
-
                         </div>
-
-
                     </div>
-
-
                     <div class="create-card__body">
-
-
                         <div class="modules">
-
-
                             <?php foreach (
                                 $modulos as $modulo
                             ): ?>
-
-
                                 <div class="module">
-
-
                                     <div class="module__header">
-
-
                                         <div>
-
                                             <span>
                                                 MÓDULO
                                                 <?= htmlspecialchars(
                                                     $modulo["numero"]
                                                 ) ?>
                                             </span>
-
-
                                             <h3>
-
                                                 <?= htmlspecialchars(
                                                     $modulo["titulo"]
                                                 ) ?>
-
                                             </h3>
-
                                         </div>
-
 
                                         <button
                                             type="button"
@@ -759,11 +426,7 @@ $modulos = [
                                         >
                                             ⋮
                                         </button>
-
-
                                     </div>
-
-
 
                                     <div class="module__lessons">
 
@@ -812,165 +475,75 @@ $modulos = [
 
 
                                     </div>
-
-
-
                                     <button
                                         type="button"
                                         class="add-lesson"
+                                        
                                     >
-
                                         ＋ Agregar lección
-
                                     </button>
-
-
                                 </div>
-
-
                             <?php endforeach; ?>
-
-
                         </div>
-
-
 
                         <button
                             type="button"
                             class="add-module"
+                            id="addModule"
                         >
-
                             ＋ Agregar módulo
-
                         </button>
-
-
                     </div>
-
-
                 </section>
-
-
 
                 <!-- =============================================
                      PRECIO
                 ============================================== -->
-
                 <section class="create-card">
-
-
                     <div class="create-card__header">
-
-
                         <div class="create-card__number">
                             04
                         </div>
-
-
                         <div>
-
                             <h2>
                                 Precio
                             </h2>
-
-
                             <p>
                                 Define el precio de tu curso.
                             </p>
-
                         </div>
-
-
                     </div>
 
-
                     <div class="create-card__body">
-
-
                         <div class="price-input">
-
-
                             <span>
                                 $
                             </span>
-
-
                             <input
                                 type="number"
+                                id="precio"
                                 name="precio"
                                 min="0"
-                                step="1"
+                                max="99999999.99"
+                                step="0.01"
+                                required
                                 placeholder="0.00"
-                                value="<?= htmlspecialchars(
-                                    $curso["precio"]
-                                ) ?>"
+                                value="<?= htmlspecialchars($valores['precio'] ?? '0.00') ?>"
                             >
-
-
                             <span>
                                 MXN
                             </span>
-
-
                         </div>
-
-
                     </div>
-
-
                 </section>
-
-
-
-                <!-- =============================================
-                     ACCIONES
-                ============================================== -->
-
-                <div class="create-course__actions">
-
-
-                    <a
-                        href="MisCursos.php"
-                        class="btn btn--secondary btn--large"
-                    >
-                        Cancelar
-                    </a>
-
-
-                    <button
-                        type="button"
-                        class="btn btn--outline btn--large"
-                    >
-                        Guardar borrador
-                    </button>
-
-
-                    <button
-                        type="submit"
-                        class="btn btn--primary btn--large"
-                    >
-                        Publicar curso
-                    </button>
-
-
-                </div>
-
-
             </form>
-
-
         </div>
-
-
     </main>
 
 
 </div>
-
-
-
-<script src="../js/Main.js"></script>
-
+<script src="<?= url('View/js/Main.js') ?>"></script>
+<script src="<?= url('View/js/CreacionCurso.js') ?>"></script>
 
 </body>
 

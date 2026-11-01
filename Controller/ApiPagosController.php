@@ -1,31 +1,33 @@
 
 <?php
 
+require_once __DIR__ . '/../Model/ENV.php';
 require_once __DIR__ . '/../Model/Curso.php';
 require_once __DIR__ . '/../Model/Pago.php';
+require_once __DIR__ . '/../Model/Usuario.php';
 require_once __DIR__ . '/../Model/StripeService.php';
 
 class ApiPagosController
 {
     private Curso $cursoModel;
     private Pago $pagoModel;
+    private Usuario $usuarioModel;
     private StripeService $stripe;
 
     public function __construct(PDO $conexion)
     {
         $this->cursoModel = new Curso($conexion);
         $this->pagoModel = new Pago($conexion);
+        $this->usuarioModel = new Usuario($conexion);
 
-        // conexion.php carga el .env al conectar, pero
-        // cargamos explícitamente la configuración por claridad.
         Env::cargar(__DIR__ . '/../.env');
 
         $secretKey = $_ENV['STRIPE_SECRET_KEY'] ?? '';
         $baseUrl = $_ENV['APP_BASE_URL'] ?? '';
 
-        if ($baseUrl === '') {
+        if ($secretKey === '' || $baseUrl === '') {
             throw new RuntimeException(
-                'Falta configurar APP_BASE_URL.'
+                'La configuración de Stripe está incompleta.'
             );
         }
 
@@ -35,17 +37,38 @@ class ApiPagosController
         );
     }
 
+    /**
+     * Crear una sesión de pago para un estudiante.
+     */
     public function crearSesion(
         int $idEstudiante,
         int $idCurso
     ): array {
-        if ($idEstudiante <= 0 || $idCurso <= 0) {
+
+        if (
+            $idEstudiante <= 0
+            || $idCurso <= 0
+        ) {
             throw new InvalidArgumentException(
                 'Los identificadores no son válidos.'
             );
         }
 
-        $curso = $this->cursoModel->obtenerParaCompra($idCurso);
+        // 1. Obtener información del estudiante.
+        $usuario = $this->usuarioModel->obtenerPorId(
+            $idEstudiante
+        );
+
+        if (!$usuario || $usuario['estatus'] !== 'Activo') {
+            throw new RuntimeException(
+                'El usuario no está disponible para realizar compras.'
+            );
+        }
+
+        // 2. Obtener información del curso.
+        $curso = $this->cursoModel->obtenerParaCompra(
+            $idCurso
+        );
 
         if (!$curso) {
             throw new RuntimeException(
@@ -53,6 +76,7 @@ class ApiPagosController
             );
         }
 
+        // 3. Comprobar si ya está inscrito.
         if (
             $this->cursoModel->estudianteInscrito(
                 $idEstudiante,
@@ -64,30 +88,52 @@ class ApiPagosController
             );
         }
 
+        // 4. Obtener el precio real desde MySQL.
         $precio = (float) $curso['precio_curso'];
 
-        if ($precio <= 0) {
+        if (
+            $precio <= 0
+            || !is_finite($precio)
+        ) {
             throw new RuntimeException(
-                'Este endpoint solo permite cursos de pago.'
+                'El precio del curso no es válido.'
             );
         }
 
-        // Crear Checkout con el precio obtenido de MySQL.
+        // 5. Crear la sesión de Stripe.
         $sesion = $this->stripe->crearSesion(
             $idCurso,
             $idEstudiante,
             $curso['nombre_curso'],
-            $precio
-        );
-
-        // Registrar la sesión antes de enviar su URL al navegador.
-        $this->pagoModel->crearPendiente(
-            $idEstudiante,
-            $idCurso,
             $precio,
-            $sesion['id']
+            $usuario['email']
         );
 
+        // 6. Registrar el pago pendiente.
+        try {
+
+            $this->pagoModel->crearPendiente(
+                $idEstudiante,
+                $idCurso,
+                $precio,
+                $sesion['id']
+            );
+
+        } catch (Throwable $e) {
+
+            error_log(
+                'No se pudo registrar el pago '
+                . $sesion['id']
+                . ': '
+                . $e->getMessage()
+            );
+
+            throw new RuntimeException(
+                'No se pudo registrar la operación de pago.'
+            );
+        }
+
+        // 7. Devolver información al navegador.
         return [
             'success' => true,
             'checkout_url' => $sesion['url'],
@@ -95,6 +141,9 @@ class ApiPagosController
         ];
     }
 
+    /**
+     * Confirmar un pago desde el webhook validado.
+     */
     public function confirmarPago(
         string $sessionId,
         int $idEstudiante,
@@ -102,6 +151,7 @@ class ApiPagosController
         int $importeCentavos,
         string $moneda
     ): void {
+
         $this->pagoModel->confirmarPago(
             $sessionId,
             $idEstudiante,
@@ -111,8 +161,21 @@ class ApiPagosController
         );
     }
 
-    public function marcarFallido(string $sessionId): void
-    {
-        $this->pagoModel->marcarFallido($sessionId);
+    /**
+     * Marcar un pago como fallido.
+     */
+    public function marcarFallido(
+        string $sessionId
+    ): void {
+
+        if (trim($sessionId) === '') {
+            throw new InvalidArgumentException(
+                'El identificador de sesión no es válido.'
+            );
+        }
+
+        $this->pagoModel->marcarFallido(
+            $sessionId
+        );
     }
 }

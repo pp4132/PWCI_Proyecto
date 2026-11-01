@@ -21,13 +21,17 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-if (empty($_SESSION['usuario_id'])) {
-    http_response_code(401);
+if (
+    empty($_SESSION['usuario_id'])
+    || ($_SESSION['usuario_rol'] ?? '') !== 'Estudiante'
+) {
+    http_response_code(403);
 
     echo json_encode([
         'success' => false,
-        'message' => 'Debes iniciar sesión.'
+        'message' => 'No tienes permisos para realizar compras.'
     ]);
+
     exit;
 }
 

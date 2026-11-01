@@ -1,4 +1,3 @@
-
 <?php
 
 require_once __DIR__ . "/../../Middleware/AuthMiddleware.php";
@@ -70,309 +69,17 @@ $inicial = mb_strtoupper(
     <!-- =====================================================
          SIDEBAR
     ====================================================== -->
-
-    <aside class="sidebar">
-
-
-        <!-- LOGO -->
-
-        <div class="sidebar__brand">
-
-            <a
-                href="../Public/Index.php"
-                class="sidebar__logo"
-            >
-                ACADEMIA
-            </a>
-
-        </div>
-
-
-        <!-- INFORMACIÓN DEL USUARIO -->
-
-        <div class="sidebar__profile">
-
-
-            <div class="sidebar__avatar">
-
-                <?= htmlspecialchars($inicial) ?>
-
-            </div>
-
-
-            <div>
-
-                <strong>
-
-                    <?= htmlspecialchars($nombre) ?>
-
-                    <?= htmlspecialchars($apellido) ?>
-
-                </strong>
-
-
-                <span>
-
-                    <?= htmlspecialchars($rol) ?>
-
-                </span>
-
-            </div>
-
-
-        </div>
-
-
-        <!-- =================================================
-             NAVEGACIÓN
-        ================================================== -->
-
-        <nav class="sidebar__nav">
-
-
-            <span class="sidebar__label">
-                PRINCIPAL
-            </span>
-
-
-            <!-- TABLERO -->
-
-            <a
-                href="Tablero.php"
-                class="sidebar__link active"
-            >
-
-                <span>
-                    ▦
-                </span>
-
-                Tablero
-
-            </a>
-
-
-            <!-- =================================================
-                 OPCIONES DEL ESTUDIANTE
-            ================================================== -->
-
-            <?php if ($rol === "Estudiante"): ?>
-
-
-                <a
-                    href="../Estudiante/Cursos.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ▣
-                    </span>
-
-                    Mis cursos
-
-                </a>
-
-
-                <a
-                    href="../Estudiante/Kardex.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ▤
-                    </span>
-
-                    Kardex
-
-                </a>
-
-
-                <a
-                    href="../Estudiante/ChatCurso.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ◌
-                    </span>
-
-                    Chat
-
-                </a>
-
-
-            <?php endif; ?>
-
-
-            <!-- =================================================
-                 OPCIONES DEL INSTRUCTOR
-            ================================================== -->
-
-            <?php if ($rol === "Instructor"): ?>
-
-
-                <a
-                    href="../Instructor/MisCursos.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ▣
-                    </span>
-
-                    Mis cursos
-
-                </a>
-
-
-                <a
-                    href="../Instructor/CreacionCurso.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ＋
-                    </span>
-
-                    Crear curso
-
-                </a>
-
-
-                <a
-                    href="../Instructor/Ventas.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        $
-                    </span>
-
-                    Ventas
-
-                </a>
-
-
-                <a
-                    href="../Instructor/ChatCurso.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ◌
-                    </span>
-
-                    Chat
-
-                </a>
-
-
-            <?php endif; ?>
-
-
-            <!-- =================================================
-                 OPCIONES DEL ADMINISTRADOR
-            ================================================== -->
-
-            <?php if ($rol === "Administrador"): ?>
-
-
-                <a
-                    href="../Admin/Usuarios.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ◉
-                    </span>
-
-                    Usuarios
-
-                </a>
-
-
-                <a
-                    href="../Admin/ConsultaReportes.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ▤
-                    </span>
-
-                    Reportes
-
-                </a>
-
-
-                <a
-                    href="../Admin/ChatCurso.php"
-                    class="sidebar__link"
-                >
-
-                    <span>
-                        ◌
-                    </span>
-
-                    Chat
-
-                </a>
-
-
-            <?php endif; ?>
-
-
-            <span class="sidebar__label">
-                CUENTA
-            </span>
-
-
-            <!-- PERFIL -->
-
-            <a
-                href="../Compartidas/Perfil.php"
-                class="sidebar__link"
-            >
-
-                <span>
-                    ⚙
-                </span>
-
-                Mi perfil
-
-            </a>
-
-
-        </nav>
-
-        <!-- CERRAR SESIÓN -->
-        <div class="sidebar__bottom">
-            <a
-                href="../Controller/LogoutController.php"
-                class="sidebar__logout"
-            >
-                <span>←</span>
-                Cerrar sesión
-            </a>
-        </div>
-
-    </aside>
-
+    <?php require_once __DIR__ . "/SideBar.php"; ?>
 
 
     <!-- =====================================================
          CONTENIDO PRINCIPAL
     ====================================================== -->
-
     <main class="dashboard-main">
-
-
         <!-- =================================================
              HEADER
         ================================================== -->
-
         <header class="dashboard-header">
-
-
             <button
                 type="button"
                 class="mobile-menu"
@@ -380,166 +87,91 @@ $inicial = mb_strtoupper(
             >
                 ☰
             </button>
-
-
             <!-- BUSCADOR -->
-
             <div class="dashboard-header__search">
-
                 <span>
                     🔍
                 </span>
-
-
                 <input
                     type="search"
                     placeholder="Buscar cursos..."
                 >
-
             </div>
-
-
             <!-- ACCIONES -->
-
             <div class="dashboard-header__actions">
-
-
                 <button
                     type="button"
                     class="notification-button"
                     aria-label="Notificaciones"
                 >
-
                     ♢
-
                     <span>
                         2
                     </span>
-
                 </button>
 
-
                 <!-- USUARIO -->
-
                 <div class="header-user">
-
-
                     <div class="header-user__avatar">
-
                         <?= htmlspecialchars($inicial) ?>
-
                     </div>
-
-
                     <div>
-
                         <strong>
-
                             <?= htmlspecialchars($nombre) ?>
-
                         </strong>
-
-
                         <span>
-
                             <?= htmlspecialchars($rol) ?>
-
                         </span>
-
                     </div>
-
-
                 </div>
-
-
             </div>
-
-
         </header>
-
-
 
         <!-- =================================================
              CONTENIDO
         ================================================== -->
-
         <div class="dashboard-content">
-
-
             <!-- =================================================
                  BIENVENIDA
             ================================================== -->
-
             <section class="dashboard-welcome">
-
-
                 <div>
-
                     <span class="section-tag">
                         MI ESPACIO
                     </span>
-
-
                     <h1>
-
                         Buenos días,
                         <span>
-
                             <?= htmlspecialchars($nombre) ?>
-
                         </span>.
-
                     </h1>
-
-
                     <p>
-
                         Aquí tienes un resumen de tu actividad.
-
                     </p>
-
                 </div>
-
-
                 <?php if ($rol === "Estudiante"): ?>
-
-
                     <a
                         href="../Public/Busqueda.php"
                         class="btn btn--primary"
                     >
                         Explorar cursos
                     </a>
-
-
                 <?php elseif ($rol === "Instructor"): ?>
-
-
                     <a
                         href="../Instructor/CreacionCurso.php"
                         class="btn btn--primary"
                     >
                         Crear curso
                     </a>
-
-
                 <?php elseif ($rol === "Administrador"): ?>
-
-
                     <a
                         href="../Admin/ConsultaReportes.php"
                         class="btn btn--primary"
                     >
                         Consultar reportes
                     </a>
-
-
                 <?php endif; ?>
-
-
             </section>
-
-
 
             <!-- =================================================
                  ESTADÍSTICAS

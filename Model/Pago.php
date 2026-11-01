@@ -1,6 +1,4 @@
-
 <?php
-
 class Pago
 {
     private PDO $conexion;
@@ -10,37 +8,55 @@ class Pago
         $this->conexion = $conexion;
     }
 
-    public function crearPendiente(
-        int $idEstudiante,
-        int $idCurso,
-        float $monto,
-        string $sessionId
-    ): void {
-        $sql = "INSERT INTO pagos (
-                    id_estudiante,
-                    id_curso,
-                    monto,
-                    metodo_pago,
-                    estado_pago,
-                    referencia_pago
-                ) VALUES (
-                    :estudiante,
-                    :curso,
-                    :monto,
-                    'Stripe Checkout',
-                    'Pendiente',
-                    :referencia
-                )";
+   
+public function crearPendiente(
+    int $idEstudiante,
+    int $idCurso,
+    float $monto,
+    string $sessionId
+): void {
 
-        $stmt = $this->conexion->prepare($sql);
-
-        $stmt->execute([
-            'estudiante' => $idEstudiante,
-            'curso' => $idCurso,
-            'monto' => number_format($monto, 2, '.', ''),
-            'referencia' => $sessionId
-        ]);
+    if (
+        $idEstudiante <= 0
+        || $idCurso <= 0
+        || $monto <= 0
+        || !is_finite($monto)
+        || trim($sessionId) === ''
+    ) {
+        throw new InvalidArgumentException(
+            'Los datos del pago no son válidos.'
+        );
     }
+
+    $sql = "INSERT INTO pagos (
+                id_estudiante,
+                id_curso,
+                monto,
+                metodo_pago,
+                estado_pago,
+                referencia_pago,
+                stripe_session_id
+            ) VALUES (
+                :estudiante,
+                :curso,
+                :monto,
+                'Stripe Checkout',
+                'Pendiente',
+                :referencia,
+                :session
+            )";
+
+    $stmt = $this->conexion->prepare($sql);
+
+    $stmt->execute([
+        'estudiante' => $idEstudiante,
+        'curso' => $idCurso,
+        'monto' => number_format($monto, 2, '.', ''),
+        'referencia' => $sessionId,
+        'session' => $sessionId
+    ]);
+}
+
 
     /**
      * Confirma un pago e inscribe al estudiante.
@@ -71,12 +87,17 @@ class Pago
         try {
             // Bloquear el pago para evitar dos confirmaciones
             // concurrentes de la misma sesión.
-            $sql = "SELECT id_pago, id_estudiante, id_curso,
-                           monto, estado_pago
-                    FROM pagos
-                    WHERE referencia_pago = :referencia
-                    LIMIT 1
-                    FOR UPDATE";
+            $sql = "SELECT
+                id_pago,
+                id_estudiante,
+                id_curso,
+                monto,
+                estado_pago,
+                stripe_session_id
+            FROM pagos
+            WHERE referencia_pago = :referencia
+            LIMIT 1
+            FOR UPDATE";
 
             $stmt = $this->conexion->prepare($sql);
             $stmt->execute(['referencia' => $sessionId]);
@@ -86,6 +107,15 @@ class Pago
             if (!$pago) {
                 throw new RuntimeException(
                     'No existe un pago asociado a esta sesión.'
+                );
+            }
+
+            if (
+                $pago['stripe_session_id'] !== null
+                && $pago['stripe_session_id'] !== $sessionId
+            ) {
+                throw new RuntimeException(
+                    'El identificador de sesión no coincide.'
                 );
             }
 
