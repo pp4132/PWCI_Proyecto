@@ -810,6 +810,21 @@
         #16a34a;
 }
 
+.sale-status.pending {
+    background: #fff4df;
+    color: #a66b00;
+}
+
+.sale-status.failed {
+    background: #ffe5e5;
+    color: #c0392b;
+}
+
+.sale-status.refunded {
+    background: #eee8ff;
+    color: #7045a5;
+}
+
 
 /* =========================================
    RESPONSIVE

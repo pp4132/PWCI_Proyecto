@@ -1,5 +1,11 @@
+
 <?php
+
 require_once __DIR__ . '/../../config.php';
+
+// =====================================================
+// DATOS DEL INSTRUCTOR
+// =====================================================
 
 $usuario = $datos['usuario'] ?? [];
 
@@ -13,135 +19,85 @@ $inicial = strtoupper(
     substr($nombre, 0, 1)
 );
 
-
 // =====================================================
-// RESUMEN DE VENTAS
-// =====================================================
-
-$resumen = [
-
-    [
-        "titulo" => "Ingresos totales",
-        "valor" => "$12,480",
-        "descripcion" => "+18.4% este mes",
-        "icono" => "$",
-        "color" => "green"
-    ],
-
-    [
-        "titulo" => "Ventas",
-        "valor" => "318",
-        "descripcion" => "+12.6% este mes",
-        "icono" => "↗",
-        "color" => "blue"
-    ],
-
-    [
-        "titulo" => "Ingresos este mes",
-        "valor" => "$2,840",
-        "descripcion" => "+8.2% respecto al anterior",
-        "icono" => "◷",
-        "color" => "purple"
-    ],
-
-    [
-        "titulo" => "Ticket promedio",
-        "valor" => "$39.25",
-        "descripcion" => "Por venta realizada",
-        "icono" => "◎",
-        "color" => "orange"
-    ]
-
-];
-
-
-// =====================================================
-// VENTAS RECIENTES
+// INFORMACIÓN DE VENTAS
 // =====================================================
 
-$ventas = [
+$resumen = $datos['resumen'] ?? [];
 
-    [
-        "curso" => "PHP desde cero",
-        "estudiante" => "Ana López",
-        "fecha" => "Hoy, 10:42",
-        "importe" => "$499",
-        "estado" => "Completada",
-        "inicial" => "A"
-    ],
+$ventas = $datos['ventas'] ?? [];
 
-    [
-        "curso" => "JavaScript moderno",
-        "estudiante" => "Miguel Torres",
-        "fecha" => "Hoy, 09:18",
-        "importe" => "$599",
-        "estado" => "Completada",
-        "inicial" => "M"
-    ],
+$rankingCursos = $datos['rankingCursos'] ?? [];
 
-    [
-        "curso" => "PHP desde cero",
-        "estudiante" => "Sofía Hernández",
-        "fecha" => "Ayer, 18:35",
-        "importe" => "$499",
-        "estado" => "Completada",
-        "inicial" => "S"
-    ],
-
-    [
-        "curso" => "Bases de datos con MySQL",
-        "estudiante" => "Daniel García",
-        "fecha" => "Ayer, 15:20",
-        "importe" => "$399",
-        "estado" => "Completada",
-        "inicial" => "D"
-    ],
-
-    [
-        "curso" => "Diseño de interfaces UI/UX",
-        "estudiante" => "Laura Martínez",
-        "fecha" => "12 Sep, 13:05",
-        "importe" => "$449",
-        "estado" => "Completada",
-        "inicial" => "L"
-    ]
-
-];
-
+$grafica = $datos['grafica'] ?? [];
 
 // =====================================================
-// CURSOS CON MÁS VENTAS
+// CONFIGURACIÓN DE GRÁFICA
 // =====================================================
 
-$rankingCursos = [
+$maxIngresos = 0;
 
-    [
-        "posicion" => 1,
-        "titulo" => "PHP desde cero",
-        "ventas" => 125,
-        "ingresos" => "$6,237",
-        "color" => "purple"
-    ],
+foreach ($grafica as $mes) {
 
-    [
-        "posicion" => 2,
-        "titulo" => "JavaScript moderno",
-        "ventas" => 84,
-        "ingresos" => "$5,124",
-        "color" => "blue"
-    ],
+    $maxIngresos = max(
+        $maxIngresos,
+        (float) $mes['ingresos']
+    );
 
-    [
-        "posicion" => 3,
-        "titulo" => "Bases de datos con MySQL",
-        "ventas" => 67,
-        "ingresos" => "$3,333",
-        "color" => "green"
-    ]
+}
 
-];
+// Evitar división entre cero.
+
+$maxIngresos = max($maxIngresos, 1);
+
+// =====================================================
+// FUNCIONES DE FORMATO
+// =====================================================
+
+function formatoDinero($cantidad): string
+{
+    return '$' . number_format(
+        (float) $cantidad,
+        2
+    );
+}
+
+function estadoPagoTexto(string $estado): string
+{
+    return match ($estado) {
+
+        'Completado' => 'Completada',
+
+        'Pendiente' => 'Pendiente',
+
+        'Fallido' => 'Fallida',
+
+        'Reembolsado' => 'Reembolsada',
+
+        default => 'Desconocido'
+
+    };
+}
+
+function estadoPagoClase(string $estado): string
+{
+    return match ($estado) {
+
+        'Completado' => 'completed',
+
+        'Pendiente' => 'pending',
+
+        'Fallido' => 'failed',
+
+        'Reembolsado' => 'refunded',
+
+        default => ''
+
+    };
+}
 
 ?>
+
 
 <!DOCTYPE html>
 
@@ -446,31 +402,27 @@ $rankingCursos = [
                     <!-- GRÁFICA VISUAL -->
 
                     <div class="chart">
-
-
                         <div class="chart__y-axis">
 
                             <span>
-                                $3k
+                                <?= formatoDinero($maxIngresos) ?>
                             </span>
 
                             <span>
-                                $2k
+                                <?= formatoDinero($maxIngresos * 0.66) ?>
                             </span>
 
                             <span>
-                                $1k
+                                <?= formatoDinero($maxIngresos * 0.33) ?>
                             </span>
 
                             <span>
-                                $0
+                                $0.00
                             </span>
 
                         </div>
 
-
                         <div class="chart__area">
-
 
                             <div class="chart__lines">
 
@@ -481,101 +433,40 @@ $rankingCursos = [
 
                             </div>
 
-
                             <div class="chart__bars">
 
+                                <?php foreach ($grafica as $mes): ?>
 
-                                <div
-                                    class="chart-bar"
-                                    style="height: 35%;"
-                                ></div>
+                                    <?php
 
+                                    $ingreso = (float) $mes['ingresos'];
 
-                                <div
-                                    class="chart-bar"
-                                    style="height: 48%;"
-                                ></div>
+                                    $altura = ($ingreso / $maxIngresos) * 100;
 
+                                    ?>
 
-                                <div
-                                    class="chart-bar"
-                                    style="height: 42%;"
-                                ></div>
+                                    <div
+                                        class="chart-bar <?= $mes['periodo'] === date('Y-m') ? 'chart-bar--current' : '' ?>"
+                                        style="height: <?= $altura ?>%;"
+                                        title="<?= htmlspecialchars($mes['mes']) ?>: <?= formatoDinero($ingreso) ?>"
+                                    ></div>
 
-
-                                <div
-                                    class="chart-bar"
-                                    style="height: 63%;"
-                                ></div>
-
-
-                                <div
-                                    class="chart-bar"
-                                    style="height: 55%;"
-                                ></div>
-
-
-                                <div
-                                    class="chart-bar"
-                                    style="height: 72%;"
-                                ></div>
-
-
-                                <div
-                                    class="chart-bar"
-                                    style="height: 68%;"
-                                ></div>
-
-
-                                <div
-                                    class="chart-bar"
-                                    style="height: 82%;"
-                                ></div>
-
-
-                                <div
-                                    class="chart-bar"
-                                    style="height: 75%;"
-                                ></div>
-
-
-                                <div
-                                    class="chart-bar"
-                                    style="height: 91%;"
-                                ></div>
-
-
-                                <div
-                                    class="chart-bar"
-                                    style="height: 84%;"
-                                ></div>
-
-
-                                <div
-                                    class="chart-bar chart-bar--current"
-                                    style="height: 96%;"
-                                ></div>
-
+                                <?php endforeach; ?>
 
                             </div>
-
 
                             <div class="chart__months">
 
-                                <span>Ene</span>
-                                <span>Feb</span>
-                                <span>Mar</span>
-                                <span>Abr</span>
-                                <span>May</span>
-                                <span>Jun</span>
-                                <span>Jul</span>
-                                <span>Ago</span>
-                                <span>Sep</span>
-                                <span>Oct</span>
-                                <span>Nov</span>
-                                <span>Dic</span>
+                                <?php foreach ($grafica as $mes): ?>
+
+                                    <span>
+                                        <?= htmlspecialchars($mes['mes']) ?>
+                                    </span>
+
+                                <?php endforeach; ?>
 
                             </div>
+
 
 
                         </div>
@@ -613,126 +504,93 @@ $rankingCursos = [
 
 
                     <div class="top-courses">
-
-
                         <?php foreach (
                             $rankingCursos as $curso
                         ): ?>
 
-
                             <div class="top-course">
-
-
                                 <div
                                     class="
                                         top-course__number
                                     "
                                 >
-
                                     <?= htmlspecialchars(
                                         $curso["posicion"]
                                     ) ?>
 
                                 </div>
 
-
                                 <div
                                     class="
                                         top-course__image
-                                        <?= htmlspecialchars(
-                                            $curso["color"]
-                                        ) ?>
+                                        <?= htmlspecialchars($curso['color']) ?>
                                     "
                                 >
-                                    A
-                                </div>
 
+                                    <?php if (!empty($curso['imagen_url'])): ?>
+
+                                        <img
+                                            src="<?= htmlspecialchars($curso['imagen_url']) ?>"
+                                            alt="<?= htmlspecialchars($curso['titulo']) ?>"
+                                            style="width:100%;height:100%;object-fit:cover;"
+                                        >
+
+                                    <?php else: ?>
+
+                                        A
+
+                                    <?php endif; ?>
+
+                                </div>
 
                                 <div
                                     class="
                                         top-course__info
                                     "
                                 >
-
                                     <strong>
 
                                         <?= htmlspecialchars(
                                             $curso["titulo"]
                                         ) ?>
-
                                     </strong>
 
-
                                     <span>
-
                                         <?= htmlspecialchars(
                                             $curso["ventas"]
                                         ) ?>
-
                                         ventas
-
                                     </span>
-
                                 </div>
 
+                                <strong class="top-course__income">
 
-                                <strong
-                                    class="
-                                        top-course__income
-                                    "
-                                >
-
-                                    <?= htmlspecialchars(
-                                        $curso["ingresos"]
-                                    ) ?>
+                                    <?= formatoDinero($curso['ingresos']) ?>
 
                                 </strong>
-
-
                             </div>
-
 
                         <?php endforeach; ?>
 
-
                     </div>
-
-
                 </article>
-
-
             </section>
-
-
 
             <!-- =================================================
                  VENTAS RECIENTES
             ================================================== -->
-
             <section class="sales-panel recent-sales">
-
-
                 <div class="sales-panel__header">
-
-
                     <div>
-
                         <h2>
                             Ventas recientes
                         </h2>
-
-
                         <p>
                             Últimas compras realizadas por estudiantes.
                         </p>
-
                     </div>
 
-
-                    <select
-                        class="sales-select"
-                    >
-
+                    <select class="sales-select">
                         <option>
                             Todas las ventas
                         </option>
@@ -744,173 +602,116 @@ $rankingCursos = [
                         <option>
                             Últimos 30 días
                         </option>
-
                     </select>
-
 
                 </div>
 
 
-
                 <div class="sales-table-wrapper">
 
-
                     <table class="sales-table">
-
-
                         <thead>
-
                             <tr>
-
                                 <th>
                                     Estudiante
                                 </th>
-
                                 <th>
                                     Curso
                                 </th>
-
                                 <th>
                                     Fecha
                                 </th>
-
                                 <th>
                                     Importe
                                 </th>
-
                                 <th>
                                     Estado
                                 </th>
 
                             </tr>
-
                         </thead>
 
-
                         <tbody>
+                            <?php if (!empty($ventas)): ?>
+                                <?php foreach ($ventas as $venta): ?>
 
+                                    <tr>
+                                        <td>
+                                            <div class="sale-student">
+                                                <div class="sale-student__avatar">
+                                                    <?= htmlspecialchars(
+                                                        $venta["inicial"]
+                                                    ) ?>
+                                                </div>
 
-                            <?php foreach (
-                                $ventas as $venta
-                            ): ?>
-
-
-                                <tr>
-
-
-                                    <td>
-
-
-                                        <div
-                                            class="
-                                                sale-student
-                                            "
-                                        >
-
-
-                                            <div
-                                                class="
-                                                    sale-student__avatar
-                                                "
-                                            >
-
-                                                <?= htmlspecialchars(
-                                                    $venta["inicial"]
-                                                ) ?>
-
+                                                <strong>
+                                                    <?= htmlspecialchars($venta['estudiante']) ?>
+                                                </strong>
+                                
                                             </div>
+                                        </td>
 
+                                        <td>
+                                            <?= htmlspecialchars($venta['curso']) ?>
+                                        </td>
 
+                                        <td>
+                                            <?= htmlspecialchars($venta['fecha']) ?>
+                                        </td>
+
+                                        <td>
                                             <strong>
-
-                                                <?= htmlspecialchars(
-                                                    $venta["estudiante"]
-                                                ) ?>
-
+                                                <?= formatoDinero($venta['importe']) ?>
                                             </strong>
+                                        </td>
+
+                                        <td>
+
+                                            <?php
+
+                                            $claseEstado = estadoPagoClase(
+                                                $venta['estado']
+                                            );
+
+                                            $textoEstado = estadoPagoTexto(
+                                                $venta['estado']
+                                            );
+
+                                            ?>
+
+                                            <span class="sale-status <?= htmlspecialchars($claseEstado) ?>">
+
+                                                <span></span>
+
+                                                <?= htmlspecialchars($textoEstado) ?>
+
+                                            </span>
+
+                                        </td>
 
 
-                                        </div>
+
+                                    </tr>
 
 
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <tr>
+                                    <td colspan="5" style="text-align:center; padding:30px;">
+                                        Todavía no tienes ventas registradas.
                                     </td>
-
-
-                                    <td>
-
-                                        <?= htmlspecialchars(
-                                            $venta["curso"]
-                                        ) ?>
-
-                                    </td>
-
-
-                                    <td>
-
-                                        <?= htmlspecialchars(
-                                            $venta["fecha"]
-                                        ) ?>
-
-                                    </td>
-
-
-                                    <td>
-
-                                        <strong>
-
-                                            <?= htmlspecialchars(
-                                                $venta["importe"]
-                                            ) ?>
-
-                                        </strong>
-
-                                    </td>
-
-
-                                    <td>
-
-                                        <span
-                                            class="
-                                                sale-status
-                                                completed
-                                            "
-                                        >
-
-                                            <span></span>
-
-                                            <?= htmlspecialchars(
-                                                $venta["estado"]
-                                            ) ?>
-
-                                        </span>
-
-                                    </td>
-
-
                                 </tr>
-
-
-                            <?php endforeach; ?>
-
-
+                            <?php endif; ?>
                         </tbody>
-
 
                     </table>
 
-
                 </div>
-
 
             </section>
 
-
         </div>
-
-
     </main>
-
-
 </div>
 
 <script src="<?= url('View/js/Main.js') ?>"></script>

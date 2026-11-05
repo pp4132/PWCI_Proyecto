@@ -1,10 +1,7 @@
 <?php
 require_once __DIR__ . '/../../config.php';
 
-/*
- * Los datos llegan desde PerfilController.php.
- */
-
+// DATOS DEL INSTRUCTOR
 $usuario = $datos['usuario'] ?? [];
 
 $nombre = $usuario['nombre'] ?? '';
@@ -13,59 +10,26 @@ $correo = $usuario['correo'] ?? '';
 $telefono = $usuario['telefono'] ?? '';
 $rol = $usuario['rol'] ?? '';
 
-
 $inicial = strtoupper(
     substr($nombre, 0, 1)
 );
 
+// CURSOS
+$cursos = $datos['cursos'] ?? [];
 
-// Cursos de ejemplo
+// ESTADÍSTICAS
+$estadisticas = $datos['estadisticas'] ?? [];
 
-$cursos = [
+$totalCursos = $estadisticas['total_cursos'] ?? 0;
 
-    [
-        "id" => 1,
-        "titulo" => "PHP desde cero",
-        "categoria" => "Programación",
-        "estudiantes" => 125,
-        "precio" => "499",
-        "estado" => "Publicado",
-        "color" => "purple"
-    ],
+$cursosPublicados = $estadisticas['publicados'] ?? 0;
 
-    [
-        "id" => 2,
-        "titulo" => "JavaScript moderno",
-        "categoria" => "Programación",
-        "estudiantes" => 84,
-        "precio" => "599",
-        "estado" => "Publicado",
-        "color" => "blue"
-    ],
+$cursosBorrador = $estadisticas['borradores'] ?? 0;
 
-    [
-        "id" => 3,
-        "titulo" => "Diseño de interfaces UI/UX",
-        "categoria" => "Diseño",
-        "estudiantes" => 42,
-        "precio" => "449",
-        "estado" => "Borrador",
-        "color" => "orange"
-    ],
-
-    [
-        "id" => 4,
-        "titulo" => "Bases de datos con MySQL",
-        "categoria" => "Bases de datos",
-        "estudiantes" => 67,
-        "precio" => "399",
-        "estado" => "Publicado",
-        "color" => "green"
-    ]
-
-];
+$totalEstudiantes = $estadisticas['estudiantes'] ?? 0;
 
 ?>
+
 
 <!DOCTYPE html>
 
@@ -112,15 +76,9 @@ $cursos = [
     <!-- =====================================================
          CONTENIDO PRINCIPAL
     ====================================================== -->
-
     <main class="dashboard-main">
-
-
         <!-- HEADER -->
-
         <header class="dashboard-header">
-
-
             <button
                 type="button"
                 class="mobile-menu"
@@ -128,112 +86,63 @@ $cursos = [
             >
                 ☰
             </button>
-
-
             <div class="dashboard-header__search">
-
                 <span>🔍</span>
-
                 <input
                     type="search"
                     placeholder="Buscar cursos..."
                 >
-
             </div>
-
-
             <div class="dashboard-header__actions">
-
-
                 <button
                     type="button"
                     class="notification-button"
                     aria-label="Notificaciones"
                 >
-
                     ♢
-
                     <span>2</span>
-
                 </button>
-
-
                 <div class="header-user">
-
-
                     <div class="header-user__avatar">
-
                         <?= htmlspecialchars($inicial) ?>
-
                     </div>
-
-
                     <div>
-
                         <strong>
-
                             <?= htmlspecialchars($nombre) ?>
-
                         </strong>
-
-
                         <span>
-
                             <?= htmlspecialchars($rol) ?>
-
                         </span>
-
                     </div>
-
-
                 </div>
-
-
             </div>
-
-
         </header>
-
-
 
         <!-- =====================================================
              CONTENIDO
         ====================================================== -->
-
         <div class="dashboard-content mis-cursos">
-
-
+            
             <!-- ENCABEZADO -->
-
             <section class="mis-cursos__header">
-
-
                 <div>
-
                     <span class="section-tag">
                         INSTRUCTOR
                     </span>
-
 
                     <h1>
                         Mis cursos
                     </h1>
 
-
                     <p>
                         Administra y supervisa los cursos que has creado.
                     </p>
-
                 </div>
-
-
                 <a
-                    href="CreacionCurso.php"
+                    href="<?= htmlspecialchars(url('Controller/CrearCursosController.php'), ENT_QUOTES, 'UTF-8') ?>"
                     class="btn btn--primary"
                 >
-
                     ＋ Crear curso
-
                 </a>
 
 
@@ -244,118 +153,71 @@ $cursos = [
             <!-- =================================================
                  RESUMEN
             ================================================== -->
-
             <section class="course-summary">
-
-
                 <div class="course-summary__card">
-
-
                     <div class="course-summary__icon purple">
                         ▣
                     </div>
 
-
                     <div>
-
                         <span>
                             Cursos totales
                         </span>
 
-
                         <strong>
-                            4
+                            <?= $totalCursos ?>
                         </strong>
-
                     </div>
-
-
                 </div>
 
-
                 <div class="course-summary__card">
-
-
                     <div class="course-summary__icon green">
                         ✓
                     </div>
-
-
                     <div>
-
                         <span>
                             Publicados
                         </span>
 
-
                         <strong>
-                            3
+                            <?= $cursosPublicados ?>
                         </strong>
-
                     </div>
-
-
                 </div>
 
-
                 <div class="course-summary__card">
-
-
                     <div class="course-summary__icon orange">
                         ◷
                     </div>
-
-
                     <div>
-
                         <span>
                             Borradores
                         </span>
 
-
                         <strong>
-                            1
+                            <?= $cursosBorrador ?>
                         </strong>
-
                     </div>
-
-
                 </div>
 
-
                 <div class="course-summary__card">
-
-
                     <div class="course-summary__icon blue">
                         ◎
                     </div>
-
-
                     <div>
-
                         <span>
                             Estudiantes
                         </span>
-
-
                         <strong>
-                            318
+                            <?= $totalEstudiantes ?>
                         </strong>
-
                     </div>
-
-
                 </div>
-
-
             </section>
-
-
 
             <!-- =================================================
                  FILTROS
             ================================================== -->
-
             <section class="course-filters">
 
 
@@ -401,184 +263,200 @@ $cursos = [
 
             </section>
 
-
-
             <!-- =================================================
                  LISTA DE CURSOS
             ================================================== -->
-
             <section class="instructor-courses">
+                <?php if (!empty($cursos)): ?>
 
+                    <?php foreach ($cursos as $curso): ?>
+                        <article class="instructor-course">
 
-                <?php foreach ($cursos as $curso): ?>
-
-
-                    <article class="instructor-course">
-
-
-                        <!-- IMAGEN -->
-
-                        <div
-                            class="
+                            <!-- IMAGEN -->
+                            <div class="
                                 instructor-course__image
-                                <?= htmlspecialchars(
-                                    $curso["color"]
-                                ) ?>
-                            "
-                        >
-
-                            <span>
-                                <?= htmlspecialchars(
-                                    $curso["categoria"]
-                                ) ?>
-                            </span>
-
-
-                            <div class="course-image-placeholder">
-                                ACADEMIA
-                            </div>
-
-                        </div>
-
-
-
-                        <!-- INFORMACIÓN -->
-
-                        <div class="instructor-course__content">
-
-
-                            <div
-                                class="
-                                    instructor-course__category
-                                "
-                            >
-
-                                <?= htmlspecialchars(
-                                    $curso["categoria"]
-                                ) ?>
-
-                            </div>
-
-
-                            <h2>
-
-                                <?= htmlspecialchars(
-                                    $curso["titulo"]
-                                ) ?>
-
-                            </h2>
-
-
-                            <div
-                                class="
-                                    instructor-course__meta
-                                "
-                            >
+                                <?= htmlspecialchars($curso['color']) ?>
+                            ">
 
                                 <span>
-                                    👥
-                                    <?= htmlspecialchars(
-                                        $curso["estudiantes"]
-                                    ) ?>
-                                    estudiantes
+                                    <?= htmlspecialchars($curso['categoria']) ?>
                                 </span>
 
+                                <?php if (!empty($curso['imagen_url'])): ?>
 
-                                <span>
-                                    $
-                                    <?= htmlspecialchars(
-                                        $curso["precio"]
-                                    ) ?>
-                                </span>
+                                    <img
+                                        src="<?= htmlspecialchars($curso['imagen_url']) ?>"
+                                        alt="<?= htmlspecialchars($curso['titulo']) ?>"
+                                        style="width:100%; height:100%; object-fit:cover;"
+                                    >
+
+                                <?php else: ?>
+
+                                    <div class="course-image-placeholder">
+                                        ACADEMIA
+                                    </div>
+
+                                <?php endif; ?>
 
                             </div>
 
+                            <!-- INFORMACIÓN -->
+                            <div class="instructor-course__content">
+                                <div
+                                    class="
+                                        instructor-course__category
+                                    "
+                                >
 
-                            <div
-                                class="
-                                    instructor-course__status
-                                    <?= strtolower(
+                                    <?= htmlspecialchars(
+                                        $curso["categoria"]
+                                    ) ?>
+
+                                </div>
+
+
+                                <h2>
+
+                                    <?= htmlspecialchars(
+                                        $curso["titulo"]
+                                    ) ?>
+
+                                </h2>
+
+                                <div class="instructor-course__meta">
+
+                                    <span>
+                                        👥
+
+                                        <?= (int) $curso['estudiantes'] ?>
+
+                                        estudiantes
+                                    </span>
+
+                                    <span>
+                                        $
+
+                                        <?= number_format(
+                                            $curso['precio'],
+                                            2
+                                        ) ?>
+                                    </span>
+
+                                </div>
+
+                                <div class="instructor-course__details">
+                                    <span>
+                                        <?= (int) $curso['modulos'] ?> módulos
+                                    </span>
+                                    <span>
+                                        <?= (int) $curso['lecciones'] ?> lecciones
+                                    </span>
+                                    <span>
+                                        <?= htmlspecialchars($curso['nivel'] ?? 'Principiante') ?>
+                                    </span>
+                                </div>
+
+                                <div
+                                    class="
+                                        instructor-course__status
+                                        <?= strtolower(
+                                            $curso["estado"]
+                                        ) === "publicado"
+                                            ? "published"
+                                            : "draft"
+                                        ?>
+                                    "
+                                >
+
+                                    <span></span>
+
+                                    <?= htmlspecialchars(
                                         $curso["estado"]
-                                    ) === "publicado"
-                                        ? "published"
-                                        : "draft"
-                                    ?>
-                                "
-                            >
+                                    ) ?>
 
-                                <span></span>
+                                </div>
 
-                                <?= htmlspecialchars(
-                                    $curso["estado"]
-                                ) ?>
 
                             </div>
 
-
-                        </div>
-
-
-
-                        <!-- ACCIONES -->
-
-                        <div
-                            class="
-                                instructor-course__actions
-                            "
-                        >
+                            <!-- ACCIONES -->
+                            <div class="instructor-course__actions">
 
 
-                            <?php if (
-                                $curso["estado"] === "Borrador"
-                            ): ?>
+                                <?php if (
+                                    $curso["estado"] === "Borrador"
+                                ): ?>
 
 
-                                <a
-                                    href="CreacionCurso.php?id=<?= urlencode($curso["id"]) ?>"
-                                    class="btn btn--primary"
+                                    <a
+                                        href="CreacionCurso.php?id=<?= urlencode($curso["id"]) ?>"
+                                        class="btn btn--primary"
+                                    >
+                                        Continuar edición
+                                    </a>
+
+
+                                <?php else: ?>
+
+
+                                    <a
+                                        href="CreacionCurso.php?id=<?= urlencode($curso["id"]) ?>"
+                                        class="btn btn--outline"
+                                    >
+                                        Editar
+                                    </a>
+
+
+                                    <a
+                                        href="../Public/CursoPreambulo.php?id=<?= urlencode($curso["id"]) ?>"
+                                        class="btn btn--secondary"
+                                    >
+                                        Ver curso
+                                    </a>
+
+
+                                <?php endif; ?>
+
+
+                                <button
+                                    type="button"
+                                    class="course-more"
+                                    aria-label="Más opciones"
                                 >
-                                    Continuar edición
-                                </a>
+                                    ⋮
+                                </button>
 
 
-                            <?php else: ?>
+                            </div>
+                        </article>
+                    <?php endforeach; ?>
 
+                <?php else: ?>
+                <div class="courses-empty">
 
-                                <a
-                                    href="CreacionCurso.php?id=<?= urlencode($curso["id"]) ?>"
-                                    class="btn btn--outline"
-                                >
-                                    Editar
-                                </a>
+                    <div class="courses-empty__icon">
+                        ▣
+                    </div>
 
+                    <h2>
+                        Todavía no has creado cursos
+                    </h2>
 
-                                <a
-                                    href="../Public/CursoPreambulo.php?id=<?= urlencode($curso["id"]) ?>"
-                                    class="btn btn--secondary"
-                                >
-                                    Ver curso
-                                </a>
+                    <p>
+                        Comienza creando tu primer curso y comparte
+                        tus conocimientos con los estudiantes.
+                    </p>
 
+                    <a
+                        href="CrearCursoController.php"
+                        class="btn btn--primary"
+                    >
+                        Crear mi primer curso
+                    </a>
 
-                            <?php endif; ?>
+                </div>
 
-
-                            <button
-                                type="button"
-                                class="course-more"
-                                aria-label="Más opciones"
-                            >
-                                ⋮
-                            </button>
-
-
-                        </div>
-
-
-                    </article>
-
-
-                <?php endforeach; ?>
+            <?php endif; ?> 
 
 
             </section>
