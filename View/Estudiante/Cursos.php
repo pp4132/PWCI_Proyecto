@@ -20,98 +20,6 @@ $inicial = strtoupper(
     substr($nombre, 0, 1)
 );
 
-
-// =====================================================
-// DATOS DE EJEMPLO
-// =====================================================
-
-if (empty($cursos)) {
-
-    $cursos = [
-
-        [
-            "id" => 1,
-            "titulo" => "PHP desde cero",
-            "categoria" => "Programación",
-            "instructor" => "Carlos Ramírez",
-            "progreso" => 72,
-            "lecciones" => 32,
-            "completadas" => 23,
-            "duracion" => "12 h 30 min",
-            "estado" => "En progreso",
-            "color" => "purple"
-        ],
-
-        [
-            "id" => 2,
-            "titulo" => "JavaScript moderno",
-            "categoria" => "Programación",
-            "instructor" => "Laura Martínez",
-            "progreso" => 45,
-            "lecciones" => 40,
-            "completadas" => 18,
-            "duracion" => "16 h 20 min",
-            "estado" => "En progreso",
-            "color" => "yellow"
-        ],
-
-        [
-            "id" => 3,
-            "titulo" => "Diseño de interfaces UI/UX",
-            "categoria" => "Diseño",
-            "instructor" => "Sofía Hernández",
-            "progreso" => 88,
-            "lecciones" => 25,
-            "completadas" => 22,
-            "duracion" => "9 h 45 min",
-            "estado" => "En progreso",
-            "color" => "pink"
-        ],
-
-        [
-            "id" => 4,
-            "titulo" => "Bases de datos con MySQL",
-            "categoria" => "Bases de datos",
-            "instructor" => "Miguel Torres",
-            "progreso" => 100,
-            "lecciones" => 28,
-            "completadas" => 28,
-            "duracion" => "10 h 15 min",
-            "estado" => "Completado",
-            "color" => "blue"
-        ],
-
-        [
-            "id" => 5,
-            "titulo" => "HTML y CSS profesional",
-            "categoria" => "Desarrollo web",
-            "instructor" => "Daniel García",
-            "progreso" => 20,
-            "lecciones" => 35,
-            "completadas" => 7,
-            "duracion" => "14 h 10 min",
-            "estado" => "En progreso",
-            "color" => "green"
-        ],
-
-        [
-            "id" => 6,
-            "titulo" => "Introducción a Python",
-            "categoria" => "Programación",
-            "instructor" => "Ana López",
-            "progreso" => 100,
-            "lecciones" => 30,
-            "completadas" => 30,
-            "duracion" => "11 h 40 min",
-            "estado" => "Completado",
-            "color" => "orange"
-        ]
-
-    ];
-
-}
-
-
 // =====================================================
 // ESTADÍSTICAS
 // =====================================================
@@ -122,15 +30,13 @@ $cursosCompletados = 0;
 
 $totalProgreso = 0;
 
-
 foreach ($cursos as $curso) {
 
-    $progreso = (int) ($curso["progreso"] ?? 0);
+    $progreso = (int) $curso['progreso'];
 
     $totalProgreso += $progreso;
 
-
-    if ($progreso >= 100) {
+    if ($curso['estado'] === 'Completado') {
 
         $cursosCompletados++;
 
@@ -138,15 +44,11 @@ foreach ($cursos as $curso) {
 
 }
 
-
 $progresoGeneral = $totalCursos > 0
     ? round($totalProgreso / $totalCursos)
     : 0;
 
-
-$cursosEnProgreso =
-    $totalCursos - $cursosCompletados;
-
+$cursosEnProgreso = $totalCursos - $cursosCompletados;
 ?>
 
 <!DOCTYPE html>
@@ -526,11 +428,10 @@ $cursosEnProgreso =
 
                     <?php
 
-                    $progreso =
-                        (int) ($curso["progreso"] ?? 0);
+                        $progreso =
+                            (int) ($curso["progreso"] ?? 0);
 
-                    $completado =
-                        $progreso >= 100;
+                        $completado = $curso['estado'] === 'Completado';
 
                     ?>
 
@@ -607,13 +508,11 @@ $cursosEnProgreso =
 
                                 </span>
 
-
                                 <span class="course-duration">
-
+                                    Inscrito:
                                     <?= htmlspecialchars(
-                                        $curso["duracion"]
+                                        date('d/m/Y', strtotime($curso['fecha_inscripcion']))
                                     ) ?>
-
                                 </span>
 
 
@@ -746,49 +645,41 @@ $cursosEnProgreso =
             <!-- =================================================
                  SIN CURSOS
             ================================================== -->
+            <?php if (!empty($cursos)): ?>
+                <section class="courses-grid">
 
-            <?php if (empty($cursos)): ?>
+                    <?php foreach ($cursos as $curso): ?>
 
+                        <!-- Aquí conservas tu tarjeta actual -->
 
+                    <?php endforeach; ?>
+
+                </section>
+            <?php else: ?>
                 <section class="courses-empty">
-
 
                     <div class="courses-empty__icon">
                         ▣
                     </div>
 
-
                     <h2>
                         Todavía no tienes cursos
                     </h2>
 
-
                     <p>
-                        Explora nuestro catálogo y comienza
-                        tu aprendizaje.
+                        Explora nuestro catálogo y comienza tu aprendizaje.
                     </p>
 
-
                     <a
-                        href="../Public/Busqueda.php"
+                        href="<?= htmlspecialchars(url('View/Public/Busqueda.php'), ENT_QUOTES, 'UTF-8') ?>"
                         class="btn btn--primary"
                     >
                         Explorar cursos
                     </a>
-
-
                 </section>
-
-
             <?php endif; ?>
-
-
         </div>
-
-
     </main>
-
-
 </div>
 
 <script src="<?= url('View/js/Main.js') ?>"></script>

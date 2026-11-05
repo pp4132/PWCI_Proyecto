@@ -1,10 +1,6 @@
 <?php
 require_once __DIR__ . '/../../config.php';
 
-/*
- * Los datos llegan desde PerfilController.php.
- */
-
 $usuario = $datos['usuario'] ?? [];
 
 $nombre = $usuario['nombre'] ?? '';
@@ -22,107 +18,8 @@ $inicial = strtoupper(
     substr($nombre, 0, 1)
 );
 
-
 // =====================================================
-// DATOS DE EJEMPLO
-// =====================================================
-
-if (empty($kardex)) {
-
-    $kardex = [
-
-        [
-            "id" => 1,
-            "curso" => "PHP desde cero",
-            "categoria" => "Programación",
-            "instructor" => "Carlos Ramírez",
-            "fecha" => "15/01/2026",
-            "progreso" => 72,
-            "estado" => "En progreso"
-        ],
-
-        [
-            "id" => 2,
-            "curso" => "JavaScript moderno",
-            "categoria" => "Programación",
-            "instructor" => "Laura Martínez",
-            "fecha" => "03/02/2026",
-            "progreso" => 45,
-            "estado" => "En progreso"
-        ],
-
-        [
-            "id" => 3,
-            "curso" => "Diseño de interfaces UI/UX",
-            "categoria" => "Diseño",
-            "instructor" => "Sofía Hernández",
-            "fecha" => "20/02/2026",
-            "progreso" => 88,
-            "estado" => "En progreso"
-        ],
-
-        [
-            "id" => 4,
-            "curso" => "Bases de datos con MySQL",
-            "categoria" => "Bases de datos",
-            "instructor" => "Miguel Torres",
-            "fecha" => "10/11/2025",
-            "progreso" => 100,
-            "estado" => "Completado"
-        ],
-
-        [
-            "id" => 5,
-            "curso" => "HTML y CSS profesional",
-            "categoria" => "Desarrollo web",
-            "instructor" => "Daniel García",
-            "fecha" => "18/03/2026",
-            "progreso" => 20,
-            "estado" => "En progreso"
-        ],
-
-        [
-            "id" => 6,
-            "curso" => "Introducción a Python",
-            "categoria" => "Programación",
-            "instructor" => "Ana López",
-            "fecha" => "05/09/2025",
-            "progreso" => 100,
-            "estado" => "Completado"
-        ]
-
-    ];
-
-}
-
-
-// =====================================================
-// CERTIFICADOS DE EJEMPLO
-// =====================================================
-
-if (empty($certificados)) {
-
-    $certificados = [
-
-        [
-            "curso" => "Bases de datos con MySQL",
-            "fecha" => "15/12/2025",
-            "codigo" => "CERT-2025-001"
-        ],
-
-        [
-            "curso" => "Introducción a Python",
-            "fecha" => "20/10/2025",
-            "codigo" => "CERT-2025-002"
-        ]
-
-    ];
-
-}
-
-
-// =====================================================
-// ESTADÍSTICAS
+// ESTADÍSTICAS DEL KARDEX
 // =====================================================
 
 $totalCursos = count($kardex);
@@ -131,19 +28,23 @@ $cursosCompletados = 0;
 
 $cursosEnProgreso = 0;
 
-$totalProgreso = 0;
+$cursosCancelados = 0;
 
+$totalProgreso = 0;
 
 foreach ($kardex as $curso) {
 
-    $progreso = (int) ($curso["progreso"] ?? 0);
+    $progreso = (int) $curso['progreso'];
 
-    $totalProgreso += $progreso;
+    $estado = $curso['estado'];
 
-
-    if ($progreso >= 100) {
+    if ($estado === 'Completado') {
 
         $cursosCompletados++;
+
+    } elseif ($estado === 'Cancelada') {
+
+        $cursosCancelados++;
 
     } else {
 
@@ -151,13 +52,20 @@ foreach ($kardex as $curso) {
 
     }
 
+    // No incluir cancelaciones en el promedio académico.
+    if ($estado !== 'Cancelada') {
+
+        $totalProgreso += $progreso;
+
+    }
+
 }
 
+$cursosConsiderados = $totalCursos - $cursosCancelados;
 
-$progresoGeneral = $totalCursos > 0
-    ? round($totalProgreso / $totalCursos)
+$progresoGeneral = $cursosConsiderados > 0
+    ? round($totalProgreso / $cursosConsiderados)
     : 0;
-
 
 $totalCertificados = count($certificados);
 
@@ -550,353 +458,256 @@ $totalCertificados = count($certificados);
 
                         </thead>
 
-
                         <tbody>
+                            <?php if (!empty($kardex)): ?>
+                                <?php foreach ($kardex as $curso): ?>
+                                    <?php
+
+                                    $progreso =
+                                        (int) ($curso["progreso"] ?? 0);
+                                    $estado = $curso['estado'];
+                                    $completado = $estado === 'Completado';
+                                    $cancelado = $estado === 'Cancelada';
+
+                                    ?>
 
 
-                            <?php foreach ($kardex as $curso): ?>
+                                    <tr>
 
-
-                                <?php
-
-                                $progreso =
-                                    (int) ($curso["progreso"] ?? 0);
-
-                                $completado =
-                                    $progreso >= 100;
-
-                                ?>
-
-
-                                <tr>
-
-
-                                    <!-- CURSO -->
-
-                                    <td>
-
-                                        <div
-                                            class="
-                                                kardex-course
-                                            "
-                                        >
-
-
+                                        <!-- CURSO -->
+                                        <td>
                                             <div
                                                 class="
-                                                    kardex-course__icon
+                                                    kardex-course
                                                 "
                                             >
+                                                <div
+                                                    class="
+                                                        kardex-course__icon
+                                                    "
+                                                >
+                                                    <?= htmlspecialchars(
+                                                        substr(
+                                                            $curso["curso"],
+                                                            0,
+                                                            1
+                                                        )
+                                                    ) ?>
+
+                                                </div>
+
+
+                                                <div>
+
+                                                    <strong>
+
+                                                        <?= htmlspecialchars(
+                                                            $curso["curso"]
+                                                        ) ?>
+
+                                                    </strong>
+
+
+                                                    <span>
+
+                                                        <?= htmlspecialchars(
+                                                            $curso["categoria"]
+                                                        ) ?>
+
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <!-- INSTRUCTOR -->
+                                        <td>
+                                            <span class="table-text">
 
                                                 <?= htmlspecialchars(
-                                                    substr(
-                                                        $curso["curso"],
-                                                        0,
-                                                        1
-                                                    )
+                                                    $curso["instructor"]
                                                 ) ?>
 
-                                            </div>
+                                            </span>
 
+                                        </td>
 
-                                            <div>
+                                        <!-- FECHA -->
+                                        <td>
+                                            <span class="table-text">
+                                                <?= htmlspecialchars(
+                                                    $curso["fecha"]
+                                                ) ?>
+                                            </span>
+                                        </td>
 
-                                                <strong>
-
-                                                    <?= htmlspecialchars(
-                                                        $curso["curso"]
-                                                    ) ?>
-
-                                                </strong>
-
-
-                                                <span>
-
-                                                    <?= htmlspecialchars(
-                                                        $curso["categoria"]
-                                                    ) ?>
-
-                                                </span>
-
-                                            </div>
-
-
-                                        </div>
-
-                                    </td>
-
-
-
-                                    <!-- INSTRUCTOR -->
-
-                                    <td>
-
-                                        <span class="table-text">
-
-                                            <?= htmlspecialchars(
-                                                $curso["instructor"]
-                                            ) ?>
-
-                                        </span>
-
-                                    </td>
-
-
-
-                                    <!-- FECHA -->
-
-                                    <td>
-
-                                        <span class="table-text">
-
-                                            <?= htmlspecialchars(
-                                                $curso["fecha"]
-                                            ) ?>
-
-                                        </span>
-
-                                    </td>
-
-
-
-                                    <!-- PROGRESO -->
-
-                                    <td>
-
-
-                                        <div
-                                            class="
-                                                table-progress
-                                            "
-                                        >
-
-
+                                        <!-- PROGRESO -->
+                                        <td>
                                             <div
                                                 class="
-                                                    table-progress__header
+                                                    table-progress
                                                 "
                                             >
-
-                                                <span>
-                                                    <?= $progreso ?>%
-                                                </span>
-
-                                            </div>
-
-
-                                            <div
-                                                class="
-                                                    table-progress__bar
-                                                "
-                                            >
-
-                                                <span
-                                                    style="
-                                                        width:
-                                                        <?= $progreso ?>%;
+                                                <div
+                                                    class="
+                                                        table-progress__header
                                                     "
-                                                ></span>
-
+                                                >
+                                                    <span>
+                                                        <?= $progreso ?>%
+                                                    </span>
+                                                </div>
+                                                <div
+                                                    class="
+                                                        table-progress__bar
+                                                    "
+                                                >
+                                                    <span
+                                                        style="
+                                                            width:
+                                                            <?= $progreso ?>%;
+                                                        "
+                                                    ></span>
+                                                </div>
                                             </div>
+                                        </td>
 
-
-                                        </div>
-
-
-                                    </td>
-
-
-
-                                    <!-- ESTADO -->
-
-                                    <td>
-
-
-                                        <span
-                                            class="
+                                        <!-- ESTADO -->
+                                        <td>
+                                            <span class="
                                                 kardex-status
                                                 <?= $completado
-                                                    ? "completed"
-                                                    : "progress" ?>
-                                            "
-                                        >
+                                                    ? 'completed'
+                                                    : ($cancelado
+                                                        ? 'cancelled'
+                                                        : 'progress') ?>
+                                            ">
 
-                                            <?php if ($completado): ?>
+                                                <?php if ($completado): ?>
 
-                                                ✓ Completado
+                                                    ✓ Completado
 
-                                            <?php else: ?>
+                                                <?php elseif ($cancelado): ?>
 
-                                                ● En progreso
+                                                    ✕ Cancelado
 
-                                            <?php endif; ?>
+                                                <?php else: ?>
 
-                                        </span>
+                                                    ● En progreso
 
+                                                <?php endif; ?>
+                                            </span>
+                                        </td>
+
+                                        <!-- ACCIÓN -->
+                                        <td>
+                                            <a
+                                                href="Cursos.php"
+                                                class="table-action"
+                                            >
+                                                Ver
+                                            </a>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+
+                                <tr>
+                                    <td colspan="6" style="text-align:center; padding:30px;">
+
+                                        Todavía no tienes historial académico.
 
                                     </td>
-
-
-
-                                    <!-- ACCIÓN -->
-
-                                    <td>
-
-                                        <a
-                                            href="Cursos.php"
-                                            class="table-action"
-                                        >
-
-                                            Ver
-
-                                        </a>
-
-                                    </td>
-
-
                                 </tr>
 
-
-                            <?php endforeach; ?>
-
-
+                            <?php endif; ?>
                         </tbody>
 
-
                     </table>
-
-
                 </div>
-
-
             </section>
-
-
 
             <!-- =================================================
                  CERTIFICADOS
             ================================================== -->
-
             <section class="certificates-panel">
-
-
                 <div class="certificates-panel__header">
-
-
                     <div>
-
                         <h2>
                             Mis certificados
                         </h2>
-
-
                         <p>
                             Cursos que has completado satisfactoriamente.
                         </p>
-
                     </div>
 
 
                     <span class="certificate-count">
-
                         <?= $totalCertificados ?>
-
                         certificados
-
                     </span>
-
-
                 </div>
-
-
 
                 <div class="certificates-grid">
+                    <?php if (!empty($certificados)): ?>
+                        <?php foreach ($certificados as $certificado): ?>
+                            <article class="certificate-card">
+                                <div class="certificate-card__icon">
+                                    ✓
+                                </div>
+                                <div class="certificate-card__content">
+                                    <span>
+                                        CERTIFICADO DE FINALIZACIÓN
+                                    </span>
+                                    <p>
+                                        Instructor:
+
+                                        <?= htmlspecialchars(
+                                            $certificado['instructor']
+                                        ) ?>
+                                    </p>
+                                    <h3>
+                                        <?= htmlspecialchars(
+                                            $certificado["curso"]
+                                        ) ?>
+                                    </h3>
+
+                                    <p>
+                                        Completado el
+                                        <?= htmlspecialchars(
+                                            $certificado["fecha"]
+                                        ) ?>
+                                    </p>
+
+                                    <small>
+                                        <?= htmlspecialchars(
+                                            $certificado["codigo"]
+                                        ) ?>
+                                    </small>
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="certificate-download"
+                                    title="Descarga de certificado próximamente"
+                                    disabled
+                                >
+                                    ↓
+                                </button>
+                            </article>
 
 
-                    <?php foreach ($certificados as $certificado): ?>
-
-
-                        <article class="certificate-card">
-
-
-                            <div class="certificate-card__icon">
-                                ✓
-                            </div>
-
-
-                            <div
-                                class="
-                                    certificate-card__content
-                                "
-                            >
-
-                                <span>
-                                    CERTIFICADO DE FINALIZACIÓN
-                                </span>
-
-
-                                <h3>
-
-                                    <?= htmlspecialchars(
-                                        $certificado["curso"]
-                                    ) ?>
-
-                                </h3>
-
-
-                                <p>
-
-                                    Completado el
-
-                                    <?= htmlspecialchars(
-                                        $certificado["fecha"]
-                                    ) ?>
-
-                                </p>
-
-
-                                <small>
-
-                                    <?= htmlspecialchars(
-                                        $certificado["codigo"]
-                                    ) ?>
-
-                                </small>
-
-                            </div>
-
-
-                            <button
-                                type="button"
-                                class="certificate-download"
-                            >
-
-                                ↓
-
-                            </button>
-
-
-                        </article>
-
-
-                    <?php endforeach; ?>
-
-
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>
+                            Todavía no tienes certificados disponibles.
+                            Completa tus cursos para obtenerlos.
+                        </p>
+                    <?php endif; ?>
                 </div>
-
-
             </section>
-
-
         </div>
-
-
     </main>
-
-
 </div>
-
-
 
 <script src="<?= url('View/js/Main.js') ?>"></script>
 

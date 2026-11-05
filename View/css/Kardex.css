@@ -599,6 +599,11 @@
         #15803d;
 }
 
+.kardex-status.cancelled {
+    background: #dcfce7;
+    color: #b91c1c;
+}
+
 
 /* =========================================
    ACCIÓN
