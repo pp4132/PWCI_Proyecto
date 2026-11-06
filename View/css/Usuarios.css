@@ -861,6 +861,15 @@
         not-allowed;
 }
 
+.user-status.pending {
+    background: #fff4dc;
+    color: #a66a00;
+}
+
+.user-status.pending span {
+    background: #e6a126;
+}
+
 
 /* =========================================
    RESPONSIVE
