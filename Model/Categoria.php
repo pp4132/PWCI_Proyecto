@@ -41,9 +41,6 @@ class Categoria
         ]);
     }
 
-    /**
-     * Obtener todas las categorías.
-     */
     public function obtenerTodas(): array
     {
         $sql = "SELECT
@@ -52,14 +49,21 @@ class Categoria
                     c.descripcion,
                     c.id_usuario_creacion,
                     c.fecha_creacion,
+
                     u.nombre AS nombre_creador,
                     u.apellidos AS apellidos_creador,
+
                     COUNT(cu.id_curso) AS total_cursos
+
                 FROM categorias c
+
                 INNER JOIN usuarios u
                     ON c.id_usuario_creacion = u.id_usuario
+
                 LEFT JOIN cursos cu
                     ON c.id_categoria = cu.id_categoria
+                    AND cu.estatus = 1
+
                 GROUP BY
                     c.id_categoria,
                     c.nombre_categoria,
@@ -68,17 +72,15 @@ class Categoria
                     c.fecha_creacion,
                     u.nombre,
                     u.apellidos
+
                 ORDER BY c.nombre_categoria ASC";
 
         $consulta = $this->conexion->prepare($sql);
         $consulta->execute();
 
-        return $consulta->fetchAll();
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Obtener una categoría por su ID.
-     */
     public function obtenerPorId(
         int $idCategoria
     ): ?array {

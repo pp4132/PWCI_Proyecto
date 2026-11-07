@@ -11,12 +11,10 @@ class Resena
     }
 
     /**
-     * Obtener reseñas activas de un curso.
+     * Obtener todas las reseñas activas de un curso.
      */
-    public function obtenerPorCurso(
-        int $idCurso
-    ): array {
-
+    public function obtenerPorCurso(int $idCurso): array
+    {
         $sql = "SELECT
                     r.id_resena,
                     r.id_estudiante,
@@ -40,43 +38,35 @@ class Resena
             'curso' => $idCurso
         ]);
 
-        return $stmt->fetchAll();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Obtener estadísticas de reseñas.
+     * Obtener el promedio y distribución de estrellas.
      */
-    public function obtenerResumen(
-        int $idCurso
-    ): array {
-
+    public function obtenerResumen(int $idCurso): array
+    {
         $sql = "SELECT
                     COUNT(*) AS total_resenas,
 
                     COALESCE(
-                        ROUND(AVG(calificacion), 2),
-                        0
+                        ROUND(AVG(calificacion), 2), 0
                     ) AS promedio,
 
-                    COALESCE(
-                        SUM(calificacion = 5), 0
-                    ) AS estrellas_5,
+                    COALESCE(SUM(calificacion = 5), 0)
+                        AS estrellas_5,
 
-                    COALESCE(
-                        SUM(calificacion = 4), 0
-                    ) AS estrellas_4,
+                    COALESCE(SUM(calificacion = 4), 0)
+                        AS estrellas_4,
 
-                    COALESCE(
-                        SUM(calificacion = 3), 0
-                    ) AS estrellas_3,
+                    COALESCE(SUM(calificacion = 3), 0)
+                        AS estrellas_3,
 
-                    COALESCE(
-                        SUM(calificacion = 2), 0
-                    ) AS estrellas_2,
+                    COALESCE(SUM(calificacion = 2), 0)
+                        AS estrellas_2,
 
-                    COALESCE(
-                        SUM(calificacion = 1), 0
-                    ) AS estrellas_1
+                    COALESCE(SUM(calificacion = 1), 0)
+                        AS estrellas_1
 
                 FROM resenas
                 WHERE id_curso = :curso
@@ -88,13 +78,13 @@ class Resena
             'curso' => $idCurso
         ]);
 
-        return $stmt->fetch();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Registrar o actualizar una reseña.
+     * Guardar o actualizar una reseña.
      *
-     * Solo pueden reseñar estudiantes inscritos.
+     * Solamente pueden reseñar estudiantes inscritos.
      */
     public function guardar(
         int $idCurso,
@@ -104,27 +94,33 @@ class Resena
         string $resena
     ): array {
 
-        if (
-            $idCurso <= 0
-            || $idEstudiante <= 0
-        ) {
+        if ($idCurso <= 0 || $idEstudiante <= 0) {
             throw new InvalidArgumentException(
                 'Los identificadores no son válidos.'
             );
         }
 
-        if (
-            $calificacion < 1
-            || $calificacion > 5
-        ) {
+        if ($calificacion < 1 || $calificacion > 5) {
             throw new InvalidArgumentException(
                 'La calificación debe estar entre 1 y 5.'
             );
         }
 
-        if (trim($resena) === '') {
+        $titulo = $titulo !== null && trim($titulo) !== ''
+            ? trim($titulo)
+            : null;
+
+        $resena = trim($resena);
+
+        if ($titulo !== null && mb_strlen($titulo) > 200) {
             throw new InvalidArgumentException(
-                'La reseña no puede estar vacía.'
+                'El título no puede superar 200 caracteres.'
+            );
+        }
+
+        if ($resena === '' || mb_strlen($resena) > 5000) {
+            throw new InvalidArgumentException(
+                'La reseña es obligatoria y no puede superar 5000 caracteres.'
             );
         }
 
@@ -132,14 +128,15 @@ class Resena
 
         try {
 
-            // Comprobar que el curso existe y está activo.
-            $stmt = $this->conexion->prepare(
-                "SELECT id_curso
-                 FROM cursos
-                 WHERE id_curso = :curso
-                   AND estatus = 1
-                 LIMIT 1"
-            );
+            // 1. Comprobar que el curso existe y está activo.
+
+            $sql = "SELECT id_curso
+                    FROM cursos
+                    WHERE id_curso = :curso
+                      AND estatus = 1
+                    LIMIT 1";
+
+            $stmt = $this->conexion->prepare($sql);
 
             $stmt->execute([
                 'curso' => $idCurso
@@ -151,15 +148,16 @@ class Resena
                 );
             }
 
-            // Comprobar que el estudiante está inscrito.
-            $stmt = $this->conexion->prepare(
-                "SELECT id_inscripcion
-                 FROM inscripciones
-                 WHERE id_curso = :curso
-                   AND id_estudiante = :estudiante
-                   AND estatus IN ('Activa', 'Terminada')
-                 LIMIT 1"
-            );
+            // 2. Comprobar que el estudiante está inscrito.
+
+            $sql = "SELECT id_inscripcion
+                    FROM inscripciones
+                    WHERE id_curso = :curso
+                      AND id_estudiante = :estudiante
+                      AND estatus IN ('Activa', 'Terminada')
+                    LIMIT 1";
+
+            $stmt = $this->conexion->prepare($sql);
 
             $stmt->execute([
                 'curso' => $idCurso,
@@ -172,7 +170,8 @@ class Resena
                 );
             }
 
-            // Insertar o actualizar la reseña.
+            // 3. Insertar o actualizar la reseña.
+
             $sql = "INSERT INTO resenas (
                         id_curso,
                         id_estudiante,
@@ -205,11 +204,12 @@ class Resena
                 'resena' => $resena
             ]);
 
-            // Actualizar promedio general del curso.
+            // 4. Actualizar el promedio del curso.
+
             $sql = "UPDATE cursos
                     SET promedio_general = (
                         SELECT COALESCE(
-                            AVG(calificacion),
+                            ROUND(AVG(calificacion), 2),
                             0
                         )
                         FROM resenas
@@ -224,6 +224,8 @@ class Resena
                 'curso' => $idCurso,
                 'curso_actual' => $idCurso
             ]);
+
+            // 5. Confirmar transacción.
 
             $this->conexion->commit();
 
@@ -242,10 +244,8 @@ class Resena
     /**
      * Ocultar una reseña.
      */
-    public function ocultar(
-        int $idResena
-    ): bool {
-
+    public function ocultar(int $idResena): bool
+    {
         $sql = "UPDATE resenas
                 SET estatus = 'Oculta'
                 WHERE id_resena = :id";
@@ -262,10 +262,8 @@ class Resena
     /**
      * Eliminar una reseña.
      */
-    public function eliminar(
-        int $idResena
-    ): bool {
-
+    public function eliminar(int $idResena): bool
+    {
         $sql = "DELETE FROM resenas
                 WHERE id_resena = :id";
 

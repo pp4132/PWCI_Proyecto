@@ -37,17 +37,11 @@ $inicial = strtoupper(
         Reportes | Academia
     </title>
 
-    <!-- CSS GENERAL -->
+     <link rel="stylesheet" href="<?= url('View/css/Style.css') ?>">
 
-     <link rel="stylesheet"
-        href="<?= url('View/css/Style.css') ?>">
+    <link rel="stylesheet" href="<?= url('View/css/Tablero.css') ?>">
 
-    <link rel="stylesheet"
-        href="<?= url('View/css/Tablero.css') ?>">
-
-    <link rel="stylesheet"
-        href="<?= url('View/css/ConsultaReportes.css') ?>">
-
+    <link rel="stylesheet" href="<?= url('View/css/ConsultaReportes.css') ?>">
 </head>
 
 <body class="dashboard-body">
@@ -463,15 +457,10 @@ $inicial = strtoupper(
                     <?php endif; ?>
                 </div>
 
-
             </section>
 
-
         </div>
-
-
     </main>
-
 
 </div>
 

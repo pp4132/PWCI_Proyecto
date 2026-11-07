@@ -1,6 +1,5 @@
-
 <?php
-
+require_once __DIR__ . '/../Model/conexion.php';
 require_once __DIR__ . '/../Model/Resena.php';
 
 class ApiResenasController
@@ -9,22 +8,35 @@ class ApiResenasController
 
     public function __construct()
     {
-        $this->modelo = new Resena();
+        $database = new Database();
+
+        $conexion = $database->conectar();
+
+        $this->modelo = new Resena($conexion);
     }
 
+    /**
+     * Responder en formato JSON.
+     */
     private function responder(
         int $status,
         array $datos
     ): void {
+
         http_response_code($status);
+
         header('Content-Type: application/json; charset=utf-8');
 
         echo json_encode(
             $datos,
-            JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_SUBSTITUTE
+            JSON_UNESCAPED_UNICODE |
+            JSON_INVALID_UTF8_SUBSTITUTE
         );
     }
 
+    /**
+     * Consultar reseñas de un curso.
+     */
     public function listar(int $idCurso): void
     {
         if ($idCurso < 1) {
@@ -35,40 +47,59 @@ class ApiResenasController
         }
 
         try {
+
             $resumen = $this->modelo->obtenerResumen($idCurso);
+
             $resenas = $this->modelo->obtenerPorCurso($idCurso);
 
             $this->responder(200, [
+                'success' => true,
                 'curso_id' => $idCurso,
                 'resumen' => $resumen,
                 'resenas' => $resenas
             ]);
-       } catch (Throwable $e) {
-    error_log($e->getMessage());
 
-    $this->responder(500, [
-        'error' => 'No se pudieron obtener las reseñas.',
-        'detalle' => $e->getMessage()
-    ]);
-}
+        } catch (Throwable $e) {
+
+            error_log($e->getMessage());
+
+            $this->responder(500, [
+                'success' => false,
+                'error' => 'No se pudieron obtener las reseñas.'
+            ]);
+        }
     }
 
+    /**
+     * Registrar o actualizar una reseña.
+     */
     public function crear(int $idCurso): void
     {
+        if ($idCurso < 1) {
+            $this->responder(400, [
+                'error' => 'ID de curso inválido.'
+            ]);
+            return;
+        }
+
+        // Verificar sesión.
+
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
 
-        if (empty($_SESSION['id_usuario'])) {
+        if (empty($_SESSION['usuario_id'])) {
             $this->responder(401, [
+                'success' => false,
                 'error' => 'Debes iniciar sesión.'
             ]);
             return;
         }
 
-        // El ID se obtiene de la sesión, nunca del JSON recibido.
-        $idEstudiante = (int) $_SESSION['id_usuario'];
+        // Obtener el ID del estudiante desde la sesión.
+        $idEstudiante = (int) $_SESSION['usuario_id'];
 
+        // Recibir JSON.
         $datos = json_decode(
             file_get_contents('php://input'),
             true
@@ -90,7 +121,11 @@ class ApiResenasController
             ? trim((string) $datos['titulo'])
             : null;
 
-        $resena = trim((string) ($datos['resena'] ?? ''));
+        $resena = trim(
+            (string) ($datos['resena'] ?? '')
+        );
+
+        // Validaciones.
 
         if (
             $calificacion === false ||
@@ -98,7 +133,7 @@ class ApiResenasController
             $calificacion > 5
         ) {
             $this->responder(422, [
-                'error' => 'La calificación debe ser un entero del 1 al 5.'
+                'error' => 'Selecciona una calificación del 1 al 5.'
             ]);
             return;
         }
@@ -112,12 +147,13 @@ class ApiResenasController
 
         if ($resena === '' || mb_strlen($resena) > 5000) {
             $this->responder(422, [
-                'error' => 'La reseña es obligatoria y no puede superar 5000 caracteres.'
+                'error' => 'Escribe una reseña de máximo 5000 caracteres.'
             ]);
             return;
         }
 
         try {
+
             $resumen = $this->modelo->guardar(
                 $idCurso,
                 $idEstudiante,
@@ -127,20 +163,32 @@ class ApiResenasController
             );
 
             $this->responder(200, [
+                'success' => true,
                 'mensaje' => 'Reseña guardada correctamente.',
                 'resumen' => $resumen
             ]);
 
         } catch (DomainException $e) {
-            $status = $e->getMessage() === 'Curso no encontrado.'
-                ? 404
-                : 403;
+
+            $mensaje = $e->getMessage();
+
+            $status = str_contains(
+                mb_strtolower($mensaje),
+                'curso no existe'
+            ) ? 404 : 403;
 
             $this->responder($status, [
+                'error' => $mensaje
+            ]);
+
+        } catch (InvalidArgumentException $e) {
+
+            $this->responder(422, [
                 'error' => $e->getMessage()
             ]);
 
         } catch (Throwable $e) {
+
             error_log($e->getMessage());
 
             $this->responder(500, [

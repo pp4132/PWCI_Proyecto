@@ -1,6 +1,4 @@
-
 <?php
-
 require_once __DIR__ . '/../../Model/ENV.php';
 require_once __DIR__ . '/../../Model/conexion.php';
 
@@ -93,13 +91,11 @@ $resenas = [];
         | Academia
     </title>
 
-    <!-- CSS GENERAL -->
     <link
         rel="stylesheet"
         href="../css/Style.css"
     >
 
-    <!-- CSS DEL CURSO -->
     <link
         rel="stylesheet"
         href="../css/Curso_preambulo.css"
@@ -109,9 +105,7 @@ $resenas = [];
 <body>
     <?php include("../Compartidas/Header.php")?>
 
-    <!-- =====================================
-         INFORMACIÓN PRINCIPAL
-    ====================================== -->
+    <!-- INFORMACIÓN PRINCIPAL -->
     <main>
         <section class="course-hero">
             <div class="container">
@@ -135,11 +129,10 @@ $resenas = [];
                         Curso
                     </span>
                 </div>
+                
                 <div class="course-hero__grid">
 
-                    <!-- =================================
-                         INFORMACIÓN
-                    ================================== -->
+                    <!-- INFORMACIÓN -->
                     <div class="course-hero__info">
                         <span class="course-category">
                             <?= htmlspecialchars(
@@ -296,25 +289,15 @@ $resenas = [];
             </div>
         </section>
 
-        <!-- =====================================
-             CONTENIDO DEL CURSO
-        ====================================== -->
+        <!-- CONTENIDO DEL CURSO -->
         <section class="course-content">
-
             <div class="container course-content__layout">
 
-
-                <!-- =================================
-                     CONTENIDO PRINCIPAL
-                ================================== -->
-
+                <!-- CONTENIDO PRINCIPAL -->
                 <div class="course-main">
 
-
                     <!-- DESCRIPCIÓN -->
-
                     <section class="course-section">
-
                         <h2>
                             Sobre este curso
                         </h2>
@@ -324,25 +307,17 @@ $resenas = [];
                                 $curso["descripcion"]
                             ) ?>
                         </p>
-
                     </section>
 
-
                     <!-- APRENDIZAJES -->
-
                     <section class="course-section">
-
                         <h2>
                             Lo que aprenderás
                         </h2>
 
-
                         <div class="learning-grid">
-
                             <?php foreach ($aprendizajes as $aprendizaje): ?>
-
                                 <div class="learning-item">
-
                                     <span>
                                         ✓
                                     </span>
@@ -352,23 +327,14 @@ $resenas = [];
                                             $aprendizaje
                                         ) ?>
                                     </p>
-
                                 </div>
-
                             <?php endforeach; ?>
-
                         </div>
-
-
                     </section>
 
-
                     <!-- CONTENIDO -->
-
-                    <section class="course-section">
-
+                    <!--<section class="course-section">
                         <div class="section-title-row">
-
                             <h2>
                                 Contenido del curso
                             </h2>
@@ -377,59 +343,39 @@ $resenas = [];
                                 <?= $curso["lecciones"] ?>
                                 lecciones
                             </span>
-
                         </div>
 
-
                         <div class="course-sections">
-
-
                             <?php foreach ($secciones as $indice => $seccion): ?>
-
                                 <details
                                     class="course-module"
                                     <?= $indice === 0
                                         ? "open"
                                         : "" ?>
                                 >
-
-
                                     <summary>
-
-
                                         <div>
-
                                             <strong>
-
                                                 <?= $indice + 1 ?>.
 
                                                 <?= htmlspecialchars(
                                                     $seccion["titulo"]
                                                 ) ?>
-
                                             </strong>
 
                                             <span>
-
                                                 <?= $seccion["lecciones"] ?>
                                                 lecciones ·
                                                 <?= $seccion["duracion"] ?>
-
                                             </span>
-
                                         </div>
-
 
                                         <span class="module-arrow">
                                             +
                                         </span>
-
-
                                     </summary>
 
-
                                     <div class="module-content">
-
                                         <div>
                                             Lección de introducción
                                         </div>
@@ -441,30 +387,18 @@ $resenas = [];
                                         <div>
                                             Ejercicios prácticos
                                         </div>
-
                                     </div>
-
-
                                 </details>
-
                             <?php endforeach; ?>
-
-
                         </div>
-
-                    </section>
-
-
+                    </section>-->
+                    
                     <!-- REQUISITOS -->
-
-                    <section class="course-section">
-
+                    <!--<section class="course-section">
                         <h2>
                             Requisitos
                         </h2>
-
                         <ul class="requirements">
-
                             <li>
                                 No necesitas experiencia previa.
                             </li>
@@ -476,56 +410,31 @@ $resenas = [];
                             <li>
                                 Tener interés por aprender programación.
                             </li>
-
                         </ul>
-
-                    </section>
-
+                    </section>-->
 
                     <!-- INSTRUCTOR -->
-
                     <section class="course-section instructor-section">
-
-
                         <h2>
                             Instructor
                         </h2>
 
-
                         <div class="instructor">
-
-
                             <div class="instructor__avatar">
                                 JP
                             </div>
 
-
                             <div>
-
                                 <h3>
                                     <?= htmlspecialchars(
                                         $curso["instructor"]
                                     ) ?>
                                 </h3>
-
-                                <p>
-                                    <?= htmlspecialchars(
-                                        $curso["instructor_descripcion"]
-                                    ) ?>
-                                </p>
-
                             </div>
-
-
                         </div>
-
-
                     </section>
 
-
-                    <!-- =================================
-                         RESEÑAS
-                    ================================== -->
+                    <!-- RESEÑAS -->
                     <section class="course-section" id="resenas">
                         <h2>Opiniones de estudiantes</h2>
                         <!-- RESUMEN -->
@@ -561,11 +470,9 @@ $resenas = [];
 
                         <!-- FORMULARIO DE RESEÑA -->
                         <div class="review-form-container">
-
                             <h3>Comparte tu opinión</h3>
 
                             <form id="form-resena">
-
                                 <label for="calificacion">
                                     Calificación
                                 </label>
@@ -609,58 +516,74 @@ $resenas = [];
                                 </button>
 
                                 <p id="mensaje-resena" role="status"></p>
-
                             </form>
-
                         </div>
 
                         <!-- LISTA DE RESEÑAS -->
                         <div class="reviews-list" id="lista-resenas">
                             <p>Cargando opiniones...</p>
                         </div>
-
                     </section>
                 </div>
             </div>
-
         </section>
     </main>
 
+    <?php include("../Compartidas/Footer.php")?>
 
-    <!-- =====================================
-         FOOTER
-    ====================================== -->
-<?php include("../Compartidas/Footer.php")?>
-
-
-    <!-- JAVASCRIPT -->
-    <script>
-        // ID del curso que se está mostrando.
+    <script>        
         const idCurso = <?= (int) $curso["id"] ?>;
 
-        // Ruta desde View/Public/CursoPreambulo.php
-        // hacia la carpeta api de la raíz del proyecto.
         const apiURL = '../../api/resenas.php?curso='
             + encodeURIComponent(idCurso);
 
+        // ==========================================
+        // FUNCIONES GENERALES
+        // ==========================================
+
+        function estrellas(valor) {
+
+            const llenas = Math.max(
+                0,
+                Math.min(5, Math.round(Number(valor) || 0))
+            );
+
+            return '★'.repeat(llenas) + '☆'.repeat(5 - llenas);
+        }
+
+        // ==========================================
+        // CONSULTAR RESEÑAS
+        // ==========================================
+
         async function cargarResenas() {
+
             const respuesta = await fetch(apiURL, {
-                credentials: 'same-origin'
+                method: 'GET',
+                credentials: 'same-origin',
+                headers: {
+                    'Accept': 'application/json'
+                },
+                cache: 'no-store'
             });
 
             const datos = await respuesta.json();
 
-            if (!respuesta.ok) {
+            if (!respuesta.ok || !datos.success) {
                 throw new Error(
                     datos.error || 'No se pudieron cargar las reseñas.'
                 );
             }
 
             const resumen = datos.resumen;
+            const resenas = datos.resenas || [];
+
             const total = Number(resumen.total_resenas);
             const promedio = Number(resumen.promedio);
 
-            // Actualizar el rating de la parte superior.
+            // ======================================
+            // ACTUALIZAR RATING SUPERIOR
+            // ======================================
+
             document.getElementById('rating-promedio')
                 .textContent = promedio.toFixed(2);
 
@@ -670,7 +593,10 @@ $resenas = [];
             document.getElementById('rating-estrellas')
                 .textContent = estrellas(promedio);
 
-            // Actualizar el resumen de opiniones.
+            // ======================================
+            // ACTUALIZAR RESUMEN
+            // ======================================
+
             document.getElementById('resumen-promedio')
                 .textContent = promedio.toFixed(2);
 
@@ -680,8 +606,12 @@ $resenas = [];
             document.getElementById('resumen-estrellas')
                 .textContent = estrellas(promedio);
 
-            // Actualizar las barras de distribución.
+            // ======================================
+            // DISTRIBUCIÓN DE ESTRELLAS
+            // ======================================
+
             for (let numero = 1; numero <= 5; numero++) {
+
                 const cantidad = Number(
                     resumen[`estrellas_${numero}`] || 0
                 );
@@ -697,23 +627,36 @@ $resenas = [];
                     .textContent = `${Math.round(porcentaje)}%`;
             }
 
-            // Mostrar las reseñas.
+            // ======================================
+            // MOSTRAR RESEÑAS
+            // ======================================
+
             const lista = document.getElementById('lista-resenas');
+
             lista.replaceChildren();
 
-            if (datos.resenas.length === 0) {
+            if (resenas.length === 0) {
+
                 const vacio = document.createElement('p');
+
                 vacio.textContent =
                     'Este curso todavía no tiene reseñas.';
+
                 lista.appendChild(vacio);
+
                 return;
             }
 
-            datos.resenas.forEach(resena => {
+            resenas.forEach(resena => {
+
                 const articulo = document.createElement('article');
+
                 articulo.className = 'review';
 
+                // Avatar.
+
                 const avatar = document.createElement('div');
+
                 avatar.className = 'review__avatar';
 
                 const nombreCompleto =
@@ -722,82 +665,126 @@ $resenas = [];
                 avatar.textContent = nombreCompleto
                     .charAt(0).toUpperCase();
 
+                // Contenido.
+
                 const contenido = document.createElement('div');
+
                 contenido.className = 'review__content';
 
+                // Encabezado.
+
                 const encabezado = document.createElement('div');
+
                 encabezado.className = 'review__header';
 
                 const nombre = document.createElement('strong');
+
                 nombre.textContent = nombreCompleto;
 
-                const calificacion = Number(resena.calificacion);
-                const estrellasResena = document.createElement('span');
+                const calificacion = document.createElement('span');
 
-                estrellasResena.className = 'stars';
-                estrellasResena.textContent = estrellas(calificacion);
+                calificacion.className = 'stars';
 
-                encabezado.append(nombre, estrellasResena);
+                calificacion.textContent = estrellas(
+                    resena.calificacion
+                );
+
+                encabezado.append(nombre, calificacion);
+
+                // Título.
 
                 const titulo = document.createElement('h4');
+
                 titulo.textContent =
                     resena.titulo || 'Opinión del estudiante';
 
+                // Comentario.
+
                 const comentario = document.createElement('p');
+
                 comentario.textContent = resena.resena;
 
-                contenido.append(encabezado, titulo, comentario);
-                articulo.append(avatar, contenido);
+                contenido.append(
+                    encabezado,
+                    titulo,
+                    comentario
+                );
+
+                articulo.append(
+                    avatar,
+                    contenido
+                );
+
                 lista.appendChild(articulo);
+
             });
         }
 
-        function estrellas(valor) {
-            const llenas = Math.max(
-                0,
-                Math.min(5, Math.round(Number(valor)))
-            );
+        // ==========================================
+        // ENVIAR RESEÑA
+        // ==========================================
 
-            return '★'.repeat(llenas) + '☆'.repeat(5 - llenas);
-        }
-
-        // Enviar una reseña a la API.
         document.getElementById('form-resena').addEventListener(
             'submit',
-            async function (evento) {
+            async function(evento) {
+
                 evento.preventDefault();
 
-                const mensaje =
-                    document.getElementById('mensaje-resena');
+                const formulario = this;
 
-                const boton = this.querySelector('button[type="submit"]');
+                const mensaje = document.getElementById('mensaje-resena');
+
+                const boton = formulario.querySelector(
+                    'button[type="submit"]'
+                );
 
                 const cuerpo = {
+
                     calificacion: Number(
                         document.getElementById('calificacion').value
                     ),
+
                     titulo: document.getElementById('titulo-resena')
                         .value.trim(),
+
                     resena: document.getElementById('texto-resena')
                         .value.trim()
+
                 };
 
                 mensaje.textContent = 'Enviando reseña...';
+
                 boton.disabled = true;
 
                 try {
+
                     const respuesta = await fetch(apiURL, {
+
                         method: 'POST',
+
                         credentials: 'same-origin',
+
                         headers: {
-                            'Content-Type': 'application/json'
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
                         },
+
                         body: JSON.stringify(cuerpo)
+
                     });
 
                     const datos = await respuesta.json();
 
-                    if (!respuesta.ok) {
+                    if (!respuesta.ok || !datos.success) {
+
+                        if (respuesta.status === 401) {
+
+                            throw new Error(
+                                'Debes iniciar sesión para publicar una reseña.'
+                            );
+
+                        }
+
                         throw new Error(
                             datos.error || 'No se pudo guardar la reseña.'
                         );
@@ -805,26 +792,36 @@ $resenas = [];
 
                     mensaje.textContent = datos.mensaje;
 
-                    this.reset();
+                    formulario.reset();
 
-                    // Volver a consultar el promedio y las opiniones.
+                    // Actualizar promedio, estrellas y opiniones.
+
                     await cargarResenas();
 
                 } catch (error) {
+
                     mensaje.textContent = error.message;
+
                 } finally {
+
                     boton.disabled = false;
+
                 }
             }
         );
 
-        // Cargar las reseñas al abrir el preámbulo.
+        // ==========================================
+        // CARGAR RESEÑAS AL ABRIR LA PÁGINA
+        // ==========================================
+
         cargarResenas().catch(error => {
+
             document.getElementById('resumen-total')
                 .textContent = error.message;
 
             document.getElementById('lista-resenas')
                 .textContent = 'No fue posible cargar las opiniones.';
+
         });
     </script>
     <script>        

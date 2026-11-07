@@ -194,4 +194,118 @@ class Curso
             throw $e;
         }
     }
+
+    public function obtenerDestacados(int $limite = 4): array {
+        $sql = "SELECT
+                    c.id_curso,
+                    c.id_categoria,
+                    c.nombre_curso,
+                    c.descripcion,
+                    c.precio_curso,
+                    c.promedio_general,
+                    c.imagen_url,
+                    c.nivel,
+
+                    cat.nombre_categoria,
+
+                    u.nombre AS nombre_instructor,
+                    u.apellidos AS apellidos_instructor
+
+                FROM cursos c
+
+                INNER JOIN categorias cat
+                    ON c.id_categoria = cat.id_categoria
+
+                INNER JOIN usuarios u
+                    ON c.id_instructor = u.id_usuario
+
+                WHERE c.estatus = 1
+                  AND u.estatus = 'Activo'
+
+                ORDER BY
+                    c.promedio_general DESC,
+                    c.id_curso DESC
+
+                LIMIT :limite";
+
+        $consulta = $this->conexion->prepare($sql);
+
+        $consulta->bindValue(
+            ':limite',
+            $limite,
+            PDO::PARAM_INT
+        );
+
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function obtenerDestacadosConEstudiantes(int $limite = 3): array {
+        $sql = "SELECT
+                    c.id_curso,
+                    c.id_categoria,
+                    c.nombre_curso,
+                    c.descripcion,
+                    c.precio_curso,
+                    c.promedio_general,
+                    c.imagen_url,
+                    c.nivel,
+
+                    cat.nombre_categoria,
+
+                    u.nombre AS nombre_instructor,
+                    u.apellidos AS apellidos_instructor,
+
+                    COUNT(
+                        DISTINCT i.id_inscripcion
+                    ) AS total_estudiantes
+
+                FROM cursos c
+
+                INNER JOIN categorias cat
+                    ON c.id_categoria = cat.id_categoria
+
+                INNER JOIN usuarios u
+                    ON c.id_instructor = u.id_usuario
+
+                LEFT JOIN inscripciones i
+                    ON c.id_curso = i.id_curso
+                    AND i.estatus IN ('Activa', 'Terminada')
+
+                WHERE c.estatus = 1
+                AND u.estatus = 'Activo'
+
+                GROUP BY
+                    c.id_curso,
+                    c.id_categoria,
+                    c.nombre_curso,
+                    c.descripcion,
+                    c.precio_curso,
+                    c.promedio_general,
+                    c.imagen_url,
+                    c.nivel,
+                    cat.nombre_categoria,
+                    u.nombre,
+                    u.apellidos
+
+                ORDER BY
+                    c.promedio_general DESC,
+                    total_estudiantes DESC
+
+                LIMIT :limite";
+
+        $consulta = $this->conexion->prepare($sql);
+
+        $consulta->bindValue(
+            ':limite',
+            $limite,
+            PDO::PARAM_INT
+        );
+
+        $consulta->execute();
+
+        return $consulta->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }

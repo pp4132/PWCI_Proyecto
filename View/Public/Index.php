@@ -1,36 +1,24 @@
 <?php
-    // En el futuro estos datos vendrán del Controller.
-    $cursosDestacados = [
-        [
-            "titulo" => "Introducción a JavaScript",
-            "instructor" => "Juan Pérez",
-            "calificacion" => "4.8",
-            "precio" => "$499",
-            "imagen" => "https://placehold.co/600x350/1e293b/ffffff?text=JavaScript"
-        ],
-        [
-            "titulo" => "Diseño UI/UX desde cero",
-            "instructor" => "Ana López",
-            "calificacion" => "4.9",
-            "precio" => "$599",
-            "imagen" => "https://placehold.co/600x350/334155/ffffff?text=UI%2FUX"
-        ],
-        [
-            "titulo" => "Python para principiantes",
-            "instructor" => "Carlos Ramírez",
-            "calificacion" => "4.7",
-            "precio" => "$449",
-            "imagen" => "https://placehold.co/600x350/475569/ffffff?text=Python"
-        ],
-        [
-            "titulo" => "Marketing Digital",
-            "instructor" => "María García",
-            "calificacion" => "4.9",
-            "precio" => "$399",
-            "imagen" => "https://placehold.co/600x350/64748b/ffffff?text=Marketing"
-        ]
-    ];
+require_once __DIR__ . '/../../config.php';
+require_once __DIR__ . '/../../Controller/IndexController.php';
+
+try {
+    $controller = new IndexController();
+    $datos = $controller->index();
+    $categorias = $datos['categorias'];
+    $cursosDestacados = $datos['cursosDestacados'];
+    $error = null;
+} catch (Throwable $e) {
+    error_log(
+        "Error al cargar Index.php: " . $e->getMessage()
+    );
+
+    $categorias = [];
+    $cursosDestacados = [];
+    $error = 'No fue posible cargar el contenido. Intenta más tarde.';
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -40,26 +28,16 @@
 
     <title>Academia | Aprende a tu ritmo</title>
 
-    <link rel="stylesheet" href="../css/Style.css">
-    <link rel="stylesheet" href="../css/Index.css">
+    <link rel="stylesheet" href="<?= url('View/css/Style.css') ?>">
+    <link rel="stylesheet" href="<?= url('View/css/Index.css') ?>">
 </head>
 
 <body>
+    <?php require_once __DIR__ . "/../Compartidas/Header.php"; ?>
 
-    <!-- =========================
-         NAVBAR
-    ========================== -->
-    <?php include("../Compartidas/Header.php")?>
-
-    <!-- =========================
-         HERO
-    ========================== -->
     <main>
-
         <section class="hero">
-
             <div class="hero__content">
-
                 <span class="hero__tag">
                     APRENDE ALGO NUEVO
                 </span>
@@ -75,30 +53,20 @@
                 </p>
 
                 <div class="hero__actions">
-
-                    <a
-                        href="../Public/Categorias.php"
-                        class="btn btn--primary btn--large"
-                    >
+                    <a href="<?= url('View/Public/Categorias.php') ?>"
+                        class="btn btn--primary btn--large">
                         Explorar cursos
                     </a>
 
-                    <a
-                        href="../Auth/Registro.php"
-                        class="btn btn--outline btn--large"
-                    >
+                    <a href="<?= url('View/Auth/Registro.php') ?>"
+                        class="btn btn--outline btn--large">
                         Crear una cuenta
                     </a>
-
                 </div>
-
             </div>
 
-
             <div class="hero__visual">
-
                 <div class="hero__card">
-
                     <div class="hero__card-icon">
                         ✦
                     </div>
@@ -108,21 +76,14 @@
                     <strong>
                         comienza aquí.
                     </strong>
-
                 </div>
-
             </div>
-
         </section>
 
-
-        <!-- =========================
-             CATEGORÍAS
-        ========================== -->
+        <!-- CATEGORÍAS -->
         <section class="categories">
 
             <div class="section-heading">
-
                 <span class="section-heading__tag">
                     EXPLORA
                 </span>
@@ -130,90 +91,65 @@
                 <h2>
                     Encuentra algo que aprender
                 </h2>
-
-
             </div>
-
 
             <div class="categories__grid">
 
-                <a href="../Public/Busqueda.php?categoria=programacion"
-                   class="category-card">
+                <?php if (!empty($categorias)): ?>
 
-                    <span class="category-card__icon">
-                        &lt;/&gt;
-                    </span>
+                    <?php
+                        $iconos = ['&lt;/&gt;', '◈', '↗', 'Aa'];
+                    ?>
 
-                    <h3>Programación</h3>
+                    <?php foreach ($categorias as $indice => $categoria): ?>
 
-                    <p>
-                        Desarrollo web, software y más.
-                    </p>
+                        <a
+                            href="<?= url('View/Public/Busqueda.php?id_categoria=' . (int)$categoria['id_categoria']) ?>"
+                            class="category-card"
+                        >
 
-                </a>
+                            <span class="category-card__icon">
+                                <?= $iconos[$indice % count($iconos)] ?>
+                            </span>
 
+                            <h3>
+                                <?= htmlspecialchars(
+                                    $categoria['nombre_categoria'],
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>
+                            </h3>
 
-                <a href="../Public/Busqueda.php?categoria=diseno"
-                   class="category-card">
+                            <p>
+                                <?= htmlspecialchars(
+                                    $categoria['descripcion'] ?? '',
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>
+                            </p>
 
-                    <span class="category-card__icon">
-                        ◈
-                    </span>
+                        </a>
 
-                    <h3>Diseño</h3>
+                    <?php endforeach; ?>
 
-                    <p>
-                        UI, UX, ilustración y creatividad.
-                    </p>
-
-                </a>
-
-
-                <a href="../Public/Busqueda.php?categoria=marketing"
-                   class="category-card">
-
-                    <span class="category-card__icon">
-                        ↗
-                    </span>
-
-                    <h3>Marketing</h3>
+                <?php else: ?>
 
                     <p>
-                        Estrategias para crecer y vender.
+                        No hay categorías disponibles actualmente.
                     </p>
 
-                </a>
-
-
-                <a href="../Public/Busqueda.php?categoria=idiomas"
-                   class="category-card">
-
-                    <span class="category-card__icon">
-                        Aa
-                    </span>
-
-                    <h3>Idiomas</h3>
-
-                    <p>
-                        Aprende nuevos idiomas.
-                    </p>
-
-                </a>
+                <?php endif; ?>
 
             </div>
 
         </section>
 
-
-        <!-- =========================
-             CURSOS DESTACADOS
-        ========================== -->
+        <!-- CURSOS DESTACADOS -->
         <section class="featured">
 
             <div class="section-heading section-heading--row">
 
                 <div>
-
                     <span class="section-heading__tag">
                         RECOMENDADOS
                     </span>
@@ -221,76 +157,127 @@
                     <h2>
                         Cursos destacados
                     </h2>
-
                 </div>
 
-                <a href="Categorias.php" class="link">
+                <a href="<?= url('View/Public/Categorías.php') ?>"
+                class="link">
                     Ver todos →
                 </a>
 
             </div>
 
-
             <div class="courses-grid">
 
-                <?php foreach ($cursosDestacados as $curso): ?>
+                <?php if (!empty($cursosDestacados)): ?>
 
-                    <article class="course-card">
+                    <?php foreach ($cursosDestacados as $curso): ?>
 
-                        <div class="course-card__image">
+                        <?php
 
-                            <img
-                                src="<?= htmlspecialchars($curso["imagen"]) ?>"
-                                alt="<?= htmlspecialchars($curso["titulo"]) ?>"
+                            $imagen = !empty($curso['imagen_url'])
+                                ? $curso['imagen_url']
+                                : 'https://cdn-icons-png.flaticon.com/512/6681/6681144.png';
+
+                            $instructor =
+                                $curso['nombre_instructor'] . ' ' .
+                                $curso['apellidos_instructor'];
+
+                        ?>
+
+                        <article class="course-card">
+
+                            <a
+                                href="<?= url('View/Public/CursoPreambulo.php?id=' . (int)$curso['id_curso']) ?>"
+                                class="course-card__image"
                             >
 
-                        </div>
+                                <img
+                                    src="<?= htmlspecialchars(
+                                        $imagen,
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>"
+                                    alt="<?= htmlspecialchars(
+                                        $curso['nombre_curso'],
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>"
+                                    loading="lazy"
+                                >
 
+                            </a>
 
-                        <div class="course-card__content">
+                            <div class="course-card__content">
 
-                            <span class="course-card__category">
-                                Curso
-                            </span>
+                                <span class="course-card__category">
 
-                            <h3>
-                                <?= htmlspecialchars($curso["titulo"]) ?>
-                            </h3>
+                                    <?= htmlspecialchars(
+                                        $curso['nombre_categoria'],
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>
 
-                            <p class="course-card__instructor">
-                                <?= htmlspecialchars($curso["instructor"]) ?>
-                            </p>
-
-                            <div class="course-card__info">
-
-                                <span>
-                                    ★ <?= htmlspecialchars($curso["calificacion"]) ?>
                                 </span>
 
-                                <strong>
-                                    <?= htmlspecialchars($curso["precio"]) ?>
-                                </strong>
+                                <h3>
+
+                                    <?= htmlspecialchars(
+                                        $curso['nombre_curso'],
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>
+
+                                </h3>
+
+                                <p class="course-card__instructor">
+
+                                    <?= htmlspecialchars(
+                                        $instructor,
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>
+
+                                </p>
+
+                                <div class="course-card__info">
+
+                                    <span>
+                                        ★ <?= number_format(
+                                            (float)$curso['promedio_general'],
+                                            1
+                                        ) ?>
+                                    </span>
+
+                                    <strong>
+                                        $<?= number_format(
+                                            (float)$curso['precio_curso'],
+                                            2
+                                        ) ?> MXN
+                                    </strong>
+
+                                </div>
 
                             </div>
 
-                        </div>
+                        </article>
 
-                    </article>
+                    <?php endforeach; ?>
 
-                <?php endforeach; ?>
+                <?php else: ?>
+
+                    <p>
+                        Actualmente no hay cursos destacados.
+                    </p>
+
+                <?php endif; ?>
 
             </div>
 
         </section>
 
-
-        <!-- =========================
-             BENEFICIOS
-        ========================== -->
+        <!-- BENEFICIOS -->
         <section class="benefits">
-
             <div class="section-heading">
-
                 <span class="section-heading__tag">
                     NUESTRA PLATAFORMA
                 </span>
@@ -298,14 +285,10 @@
                 <h2>
                     Aprende de una manera diferente
                 </h2>
-
             </div>
 
-
             <div class="benefits__grid">
-
                 <article class="benefit">
-
                     <div class="benefit__icon">
                         01
                     </div>
@@ -313,17 +296,13 @@
                     <h3>
                         Aprende
                     </h3>
-
                     <p>
                         Accede a contenido diseñado para
                         ayudarte a desarrollar nuevas habilidades.
                     </p>
-
                 </article>
 
-
                 <article class="benefit">
-
                     <div class="benefit__icon">
                         02
                     </div>
@@ -336,12 +315,9 @@
                         Resuelve preguntas y actividades
                         mientras avanzas por cada curso.
                     </p>
-
                 </article>
 
-
                 <article class="benefit">
-
                     <div class="benefit__icon">
                         03
                     </div>
@@ -354,21 +330,13 @@
                         Completa tus cursos y demuestra
                         todo lo que has aprendido.
                     </p>
-
                 </article>
-
             </div>
-
         </section>
 
-
-        <!-- =========================
-             CTA
-        ========================== -->
+        <!-- CTA -->
         <section class="cta">
-
             <div class="cta__content">
-
                 <span>
                     ¿LISTO PARA COMENZAR?
                 </span>
@@ -378,27 +346,15 @@
                     está a un curso de distancia.
                 </h2>
 
-                <a
-                    href="Registro.php"
-                    class="btn btn--light btn--large"
-                >
+                <a href="<?= url('View/Auth/Registro.php') ?>"
+                    class="btn btn--light btn--large">
                     Crear mi cuenta
                 </a>
-
             </div>
-
         </section>
-
     </main>
+    <?php require_once __DIR__ . "/../Compartidas/Footer.php"; ?>
 
-
-    <!-- =========================
-         FOOTER
-    ========================== -->
-<?php include("../Compartidas/Footer.php")?>
-
-
-    <script src="../js/Main.js"></script>
-
+    <script src="<?= url('View/js/Main.js') ?>"></script>
 </body>
 </html>

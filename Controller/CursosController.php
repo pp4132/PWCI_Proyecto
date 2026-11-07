@@ -1,6 +1,4 @@
-
 <?php
-
 require_once __DIR__ . '/../config.php';
 require_once __DIR__ . '/../Middleware/AuthMiddleware.php';
 require_once __DIR__ . '/../Model/conexion.php';
